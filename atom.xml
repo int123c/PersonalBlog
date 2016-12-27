@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2016-12-26T15:57:38.000Z</updated>
+  <updated>2016-12-27T12:00:09.000Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -16,19 +16,40 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>avatar-megumin-explosion</title>
+    <title>新头像，Explosion</title>
     <link href="http://intii.com/2016/avatar-megumin-explosion/"/>
     <id>http://intii.com/2016/avatar-megumin-explosion/</id>
     <published>2016-12-20T15:02:40.000Z</published>
-    <updated>2016-12-26T15:57:38.000Z</updated>
+    <updated>2016-12-27T12:00:09.000Z</updated>
     
-    <content type="html"><![CDATA[<p>为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。</p>
+    <content type="html"><![CDATA[<p>为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。<br><a id="more"></a></p>
+<p><img src="/media/avatar-megumin.jpg" alt=""></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。&lt;/p&gt;
-
+      &lt;p&gt;为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>新头像，从寨大毕业</title>
+    <link href="http://intii.com/2016/avatar-graduation-2016/"/>
+    <id>http://intii.com/2016/avatar-graduation-2016/</id>
+    <published>2016-04-18T11:58:45.000Z</published>
+    <updated>2016-12-27T12:02:12.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>一不小心，就要从寨大毕业了。</p>
+<a id="more"></a>
+<p><img src="/media/avatar-graduation-2016.jpg" alt="Christmas1"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;一不小心，就要从寨大毕业了。&lt;/p&gt;
     
     </summary>
     
@@ -549,9 +570,9 @@
       <category term="Travel Journal" scheme="http://intii.com/categories/Travel-Journal/"/>
     
     
-      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
-    
       <category term="台北" scheme="http://intii.com/tags/%E5%8F%B0%E5%8C%97/"/>
+    
+      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
     
   </entry>
   
@@ -619,11 +640,11 @@
       <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
     
     
+      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
+    
       <category term="wordpress" scheme="http://intii.com/tags/wordpress/"/>
     
       <category term="X100S" scheme="http://intii.com/tags/X100S/"/>
-    
-      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
     
   </entry>
   
