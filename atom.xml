@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2016-12-27T12:00:09.000Z</updated>
+  <updated>2016-12-30T15:38:56.000Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -16,19 +16,39 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>2016 年总结</title>
+    <link href="http://intii.com/2016/summary-of-2016/"/>
+    <id>http://intii.com/2016/summary-of-2016/</id>
+    <published>2016-12-30T13:37:32.000Z</published>
+    <updated>2016-12-30T15:38:56.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>如同往常一样，今年定下了很多目标，达成了没几个，很多遗憾。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;如同往常一样，今年定下了很多目标，达成了没几个，很多遗憾。&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
     <title>新头像，Explosion</title>
     <link href="http://intii.com/2016/avatar-megumin-explosion/"/>
     <id>http://intii.com/2016/avatar-megumin-explosion/</id>
     <published>2016-12-20T15:02:40.000Z</published>
-    <updated>2016-12-27T12:00:09.000Z</updated>
+    <updated>2016-12-30T15:39:53.000Z</updated>
     
-    <content type="html"><![CDATA[<p>为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。<br><a id="more"></a></p>
+    <content type="html"><![CDATA[<p>为了庆祝《为美好的世界献上祝福》第二季即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。<br><a id="more"></a></p>
 <p><img src="/media/avatar-megumin.jpg" alt=""></p>
 ]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;为了庆祝新番为美好的世界献上祝福即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。&lt;br&gt;
+      &lt;p&gt;为了庆祝《为美好的世界献上祝福》第二季即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。&lt;br&gt;
     
     </summary>
     
@@ -40,11 +60,11 @@
     <link href="http://intii.com/2016/avatar-graduation-2016/"/>
     <id>http://intii.com/2016/avatar-graduation-2016/</id>
     <published>2016-04-18T11:58:45.000Z</published>
-    <updated>2016-12-27T12:02:12.000Z</updated>
+    <updated>2016-12-27T13:22:09.000Z</updated>
     
     <content type="html"><![CDATA[<p>一不小心，就要从寨大毕业了。</p>
 <a id="more"></a>
-<p><img src="/media/avatar-graduation-2016.jpg" alt="Christmas1"></p>
+<p><img src="/media/avatar-graduation-2016.jpg" alt=""></p>
 ]]></content>
     
     <summary type="html">
