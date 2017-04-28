@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2017-04-28T16:40:07.000Z</updated>
+  <updated>2017-04-28T16:47:12.000Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -20,14 +20,14 @@
     <link href="http://intii.com/2017/a-better-way-to-display-a-book-cover-questionmark/"/>
     <id>http://intii.com/2017/a-better-way-to-display-a-book-cover-questionmark/</id>
     <published>2017-04-28T14:30:13.000Z</published>
-    <updated>2017-04-28T16:40:07.000Z</updated>
+    <updated>2017-04-28T16:47:12.000Z</updated>
     
     <content type="html"><![CDATA[<p>上周赶着要交一个作业，原本是想着开新的项目写一部分交上去的，后来进度太糟糕，就打算另辟蹊径。只剩下几天时间，偶然看 Dribbble 的时候看到了一个豆瓣图书的客户端，觉得要不写个扫码获取书本资料的 app 吧，简单，又符合题意，又能顺别写写 Objective-C 练习一下，便以 <code>Book Shelf</code> 为关键词在 Dribbble 上搜索一番，发现<a href="https://dribbble.com/shots/3116835-Bookshelf">有个设计</a>很棒。它展示的书籍封面是立体的，打开大图仔细一看，发现事情没有那么简单，看起来像是在一张平面的封面上，切了角，打了高光加了阴影，却高大上了许多。</p>
 <p>先是在 Sketch 里面试了试。</p>
 <object style="width: 100%;" data="/media/displaying-book-cover.svg" type="image/svg+xml"><br>  <img src="http://o7kolop30.bkt.clouddn.com/displaying-book-cover.png" /><br></object>
 
 <a id="more"></a>
-<p>具体实现简单粗暴，就是<a href="https://github.com/int123c/StallApp/blob/master/Stall/ BookView.m">上面罩了一堆 CALayer</a>（</p>
+<p>具体实现简单粗暴，就是<a href="https://github.com/int123c/StallApp/blob/master/Stall/BookView.m">上面罩了一堆 CALayer</a>（</p>
 <p>具体效果：<br><img src="http://o7kolop30.bkt.clouddn.com/IMG_2204.png" style="width:400px;" /></p>
 ]]></content>
     
