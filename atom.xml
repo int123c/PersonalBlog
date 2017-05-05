@@ -722,9 +722,9 @@
       <category term="Travel Journal" scheme="http://intii.com/categories/Travel-Journal/"/>
     
     
-      <category term="台北" scheme="http://intii.com/tags/%E5%8F%B0%E5%8C%97/"/>
-    
       <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
+    
+      <category term="台北" scheme="http://intii.com/tags/%E5%8F%B0%E5%8C%97/"/>
     
   </entry>
   
@@ -792,11 +792,11 @@
       <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
     
     
-      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
-    
       <category term="wordpress" scheme="http://intii.com/tags/wordpress/"/>
     
       <category term="X100S" scheme="http://intii.com/tags/X100S/"/>
+    
+      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
     
   </entry>
   
