@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://intii.com/2017/codable-enum-with-associated-values/</loc>
+    
+    <lastmod>2017-10-19T08:30:07.779Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://intii.com/monte-carlo-tree-search-in-hex.html</loc>
+    
+    <lastmod>2017-10-16T15:15:44.750Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://intii.com/2017/write-objc-like-writing-swift/</loc>
     
     <lastmod>2017-09-12T05:41:21.000Z</lastmod>

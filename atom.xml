@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2017-09-12T05:41:21.000Z</updated>
+  <updated>2017-10-19T08:30:07.779Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -14,6 +14,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Codable Enum with Associated Values</title>
+    <link href="http://intii.com/2017/codable-enum-with-associated-values/"/>
+    <id>http://intii.com/2017/codable-enum-with-associated-values/</id>
+    <published>2017-10-19T06:21:00.000Z</published>
+    <updated>2017-10-19T08:30:07.779Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们决定在项目中使用 JSON 来储存每一个章节的信息，于是就出现了一个需求，JSON 里面的数组里可能会存在多种 Object，要举个栗子的话，就是一台战舰上可能会同时搭载了一些 Mobile Suits 和 Mobile Armor，而且它们还是放在一块儿的，却又有着不同类型的属性。</p>
+<p><img src="http://o7kolop30.bkt.clouddn.com/msandma.png" width="340px"></p>
+<p>既然我们在用 Swift，就很自然的想用 Enum 来表示它们：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">enum</span> <span class="title">Unit</span>: <span class="title">Codable</span> </span>&#123;            <span class="comment">// &#123;</span></div><div class="line">    <span class="keyword">case</span> mobileArmor(           <span class="comment">//   "type": "mobile-armor",</span></div><div class="line">        numberOfPilots: <span class="type">Int</span>     <span class="comment">//   "number-of-pilots": 2</span></div><div class="line">    )                           <span class="comment">// &#125;,</span></div><div class="line">                                <span class="comment">// &#123;</span></div><div class="line">    <span class="keyword">case</span> mobileSuit(            <span class="comment">//   "type": "mobile-suit"</span></div><div class="line">        numberOfLegs: <span class="type">Int</span>,      <span class="comment">//   "number-of-leg": 2,</span></div><div class="line">        isGundam: <span class="type">Bool</span>          <span class="comment">//   "is-gundam": true</span></div><div class="line">    )                           <span class="comment">// &#125;</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>对于 Mobile Armor，它可能需要好几个驾驶员负责四肢和头部，但对于 Mobile Suite，上头则更在乎它们有多少只脚，以及<ruby>是不是高达<rt>有没有光环</rt></ruby>。当我们直接加上 <code>Codable</code>，Compiler 就报错了，显然我们需要手动做一些什么奇怪的事情才行。</p>
+<a id="more"></a>
+<p>易知，Compiler 没有恰当的手段给我们自动生成 <code>CodingKey</code>，对于普通的 Enum，我们可以指定 Enum 的 raw value 的类型来解决问题，但带有 associated values 的 Enum 则不允许我们这么做，所以我们得手动添加 <code>CodingKey</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">enum</span> <span class="title">CodingKeys</span>: <span class="title">String</span>, <span class="title">CodingKey</span> </span>&#123;</div><div class="line">    <span class="keyword">case</span> type</div><div class="line">    <span class="keyword">case</span> numberOfLegs = <span class="string">"number-of-legs"</span>, isGundam = <span class="string">"is-gundam"</span></div><div class="line">    <span class="keyword">case</span> numberOfPilots = <span class="string">"number-of-pilots"</span></div><div class="line">&#125;</div><div class="line">``` </div><div class="line"></div><div class="line">然后我们还需要实现 `<span class="keyword">init</span>(from decoder: <span class="type">Decoder</span>)`：</div><div class="line"></div><div class="line">```swift</div><div class="line"><span class="keyword">init</span>(from decoder: <span class="type">Decoder</span>) <span class="keyword">throws</span> &#123;</div><div class="line">    <span class="keyword">let</span> values = <span class="keyword">try</span> decoder.container(keyedBy: <span class="type">CodingKeys</span>.<span class="keyword">self</span>)</div><div class="line">    <span class="keyword">let</span> type = <span class="keyword">try</span> container.decode(<span class="type">String</span>.<span class="keyword">self</span>, forKey: .type)</div><div class="line">        </div><div class="line">    <span class="keyword">switch</span> type &#123;</div><div class="line">    <span class="keyword">case</span> <span class="string">"mobile-suit"</span>:</div><div class="line">        <span class="keyword">let</span> numberOfLegs = <span class="keyword">try</span> values.decode(<span class="type">Int</span>.<span class="keyword">self</span>, forKey: .numberOfLegs)</div><div class="line">        <span class="keyword">let</span> isGundam = <span class="keyword">try</span> values.decode(<span class="type">Bool</span>.<span class="keyword">self</span>, forKey: .isGundam)</div><div class="line">        <span class="keyword">self</span> = .mobileSuit(numberOfLegs: numberOfLegs, isGundam: isGundam)</div><div class="line">    <span class="keyword">case</span> <span class="string">"mobile-armor"</span>:</div><div class="line">        <span class="keyword">let</span> numberOfPilots = <span class="keyword">try</span> values.decode(<span class="type">Int</span>.<span class="keyword">self</span>, forKey: .numberOfPilots)</div><div class="line">        <span class="keyword">self</span> = .mobileArmor(numberOfPilots: numberOfPilots)</div><div class="line">    <span class="keyword">default</span>: <span class="keyword">throw</span> <span class="type">UnitError</span>.decoding(<span class="string">"error"</span>)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样把不同 case 的 coding keys 都放在一起是比较危险的，即便是新人类或者调整者，也不能保证不会手残，在生成 MS 资料的时候去读取了一个不存在的、属于 MA 的 key。所以要是想再 type safe 一些的话，可以把不同 case 的 coding keys 放在不同的 Enum 里面，防止敲错 key：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">enum</span> <span class="title">MobileArmorCodingKeys</span>: <span class="title">String</span>, <span class="title">CodingKey</span> </span>&#123;</div><div class="line">    <span class="keyword">case</span> numberOfPilots = <span class="string">"number-of-pilots"</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">init</span>(from decoder: <span class="type">Decoder</span>) <span class="keyword">throws</span> &#123;</div><div class="line">    ...</div><div class="line">    <span class="keyword">case</span> <span class="string">"mobile-armor"</span>:</div><div class="line">        <span class="keyword">let</span> values = <span class="keyword">try</span> decoder.container(keyedBy: <span class="type">MobileArmorCodingKeys</span>.<span class="keyword">self</span>)</div><div class="line">        <span class="keyword">let</span> numberOfPilots = <span class="keyword">try</span> values.decode(<span class="type">Int</span>.<span class="keyword">self</span>, forKey: .numberOfPilots)</div><div class="line">        <span class="keyword">self</span> = .mobileArmor(numberOfPilots: numberOfPilots)</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Encode 部分也是同理：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">func encode(to encoder: Encoder) throws &#123;</div><div class="line">    var container = encoder.container(keyedBy: CodingKeys.self)</div><div class="line">    switch self &#123;</div><div class="line">    case let .mobileSuit(numberOfLegs, isGundam):</div><div class="line">        try container.encode("mobile-suit", forKey: .type)</div><div class="line">        var values = encoder.container(keyedBy: MobileSuitCodingKeys.self)</div><div class="line">        try values.encode(isGundam, forKey: .isGundam)</div><div class="line">        try values.encode(numberOfLegs, forKey: .numberOfLegs)</div><div class="line">    case .mobileArmor(let numberOfPilots):...</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">let json = """</div><div class="line">[</div><div class="line">    &#123;</div><div class="line">        "type": "mobile-suit",</div><div class="line">        "is-gundam": true,</div><div class="line">        "number-of-legs": 4</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        "type": "mobile-armor",</div><div class="line">        "number-of-pilots": 2</div><div class="line">    &#125;</div><div class="line">]</div><div class="line">"""</div><div class="line">let decoder = JSONDecoder()</div><div class="line">let result = try! decoder.decode([Unit].self, from: json.data(using: .utf8)!)</div><div class="line">// [Unit.mobileSuit(numberOfLegs: 4, isGundam: true), Unit.mobileArmor(2)]</div><div class="line">let encoder = JSONEncoder()</div><div class="line">let data = try! encoder.encode(result)</div><div class="line">// [&#123;"type":"mobile-suit","number-of-legs":4,"is-gundam":true&#125;,&#123;"type":"mobile-armor","number-of-pilots":2&#125;]</div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我们决定在项目中使用 JSON 来储存每一个章节的信息，于是就出现了一个需求，JSON 里面的数组里可能会存在多种 Object，要举个栗子的话，就是一台战舰上可能会同时搭载了一些 Mobile Suits 和 Mobile Armor，而且它们还是放在一块儿的，却又有着不同类型的属性。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;http://o7kolop30.bkt.clouddn.com/msandma.png&quot; width=&quot;340px&quot;&gt;&lt;/p&gt;
+&lt;p&gt;既然我们在用 Swift，就很自然的想用 Enum 来表示它们：&lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Unit&lt;/span&gt;: &lt;span class=&quot;title&quot;&gt;Codable&lt;/span&gt; &lt;/span&gt;&amp;#123;            &lt;span class=&quot;comment&quot;&gt;// &amp;#123;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; mobileArmor(           &lt;span class=&quot;comment&quot;&gt;//   &quot;type&quot;: &quot;mobile-armor&quot;,&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        numberOfPilots: &lt;span class=&quot;type&quot;&gt;Int&lt;/span&gt;     &lt;span class=&quot;comment&quot;&gt;//   &quot;number-of-pilots&quot;: 2&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    )                           &lt;span class=&quot;comment&quot;&gt;// &amp;#125;,&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                                &lt;span class=&quot;comment&quot;&gt;// &amp;#123;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; mobileSuit(            &lt;span class=&quot;comment&quot;&gt;//   &quot;type&quot;: &quot;mobile-suit&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        numberOfLegs: &lt;span class=&quot;type&quot;&gt;Int&lt;/span&gt;,      &lt;span class=&quot;comment&quot;&gt;//   &quot;number-of-leg&quot;: 2,&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        isGundam: &lt;span class=&quot;type&quot;&gt;Bool&lt;/span&gt;          &lt;span class=&quot;comment&quot;&gt;//   &quot;is-gundam&quot;: true&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    )                           &lt;span class=&quot;comment&quot;&gt;// &amp;#125;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;对于 Mobile Armor，它可能需要好几个驾驶员负责四肢和头部，但对于 Mobile Suite，上头则更在乎它们有多少只脚，以及&lt;ruby&gt;是不是高达&lt;rt&gt;有没有光环&lt;/rt&gt;&lt;/ruby&gt;。当我们直接加上 &lt;code&gt;Codable&lt;/code&gt;，Compiler 就报错了，显然我们需要手动做一些什么奇怪的事情才行。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>像写 Swift 那样写 Objective-C</title>
@@ -722,78 +756,6 @@
       <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
     
       <category term="台北" scheme="http://intii.com/tags/%E5%8F%B0%E5%8C%97/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>暑假总结</title>
-    <link href="http://intii.com/2013/summer-vocation-2013/"/>
-    <id>http://intii.com/2013/summer-vocation-2013/</id>
-    <published>2013-08-26T17:08:16.000Z</published>
-    <updated>2016-12-25T09:23:56.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>不知不觉离暑假结束又剩下没几天了，整个暑假人品都差的要死，先是本来说好暑假出国玩的表妹那一行人又说不去了；然后说想去台湾玩，哪知道入台证办了一个星期每天都收到通知说有资料错了；再后来就是推友聚会那天发烧打吊针…</p>
-<p>除了上述的各种不爽之外，咱这个暑假还是遇到了些不错的事情，比如说买到了<del>仿旁轴复古造型大底便携等效35mm定焦不可换镜无反数码相机</del> X100S。还自己做了个 Wordpress 主题自己用。还有什么来着…现在回顾一下发现暑假都没做什么事情呢(´･ω･｀)</p>
-<a id="more"></a>
-<p>以下是流水账：</p>
-<h1 id="Jul-18-xx"><a href="#Jul-18-xx" class="headerlink" title="Jul. 18-xx"></a>Jul. 18-xx</h1><p>这段时间基本都在做 Wordpress 的主题，在好久好久之前其实就已经用 Sketch 画好了大体的设计，原本想着是这样的：</p>
-<p><img src="http://o7kolop30.bkt.clouddn.com/Screen-Shot-2013-08-26-at-11.40.19-PM.png" alt=" 原本是这样的"></p>
-<p>然后不知道哪个大叔在 Twitter 上分享了<a href="http://viljamis.com/blog/">这个站</a>觉得还真是不错，于是就又重新画了。</p>
-<p>那个站的链接样式好有趣所以直接就抄过来啦(´･ω･｀)</p>
-<h1 id="Jul-26-28"><a href="#Jul-26-28" class="headerlink" title="Jul. 26-28"></a>Jul. 26-28</h1><p>因为看《弹丸论破》觉得好有意思于是决定下载下来玩玩，废寝忘食地花了三天才终于通关了，作为一款射击游戏没有手柄用模拟器来玩实在是太难太难了，根本瞄准不能啊。</p>
-<p>而且 Mac 上都没有靠谱的 PSP 模拟器<em>(:3 」∠)</em></p>
-<h1 id="Aug-2"><a href="#Aug-2" class="headerlink" title="Aug. 2"></a>Aug. 2</h1><p>X100S 送到家里了。</p>
-<p>原本我对自己说买相机的话，要不就买 Leica，要不就买 Leica，直到某天在 Amazon 上搜 Leica M9 看价格解毒的时候看见了 Fujifilm X100，一开始还以为这特么是什么山寨机噢我去，后来看了好多相关文章才将原本的想法改成了要买不起 Leica 就买 Fujifilm X 系列好了，而且混合取景器什么的听起来就觉得很帅啊（</p>
-<p>后来发现 Fujifilm 又发布 X100S 了，解决了 X100 的许多问题，样子还是那么骚，于是淡定的等了好几个月，最后才终于拿到了这台日版的机子（到处都没货的说。</p>
-<h1 id="Aug-9"><a href="#Aug-9" class="headerlink" title="Aug. 9"></a>Aug. 9</h1><p>自己一个人去看《环太平洋》，不得不说 iMax 还真是赞呢（第一次看 iMax 的火星人），京基那边的电影院也比万象城那边的靠谱多了，拿眼睛不用交押金。</p>
-<p>不得不说，3D 的芦田爱菜实在是太赞了（</p>
-<h1 id="Aug-15"><a href="#Aug-15" class="headerlink" title="Aug. 15"></a>Aug. 15</h1><p>今天是初中同学聚会呢，练老师和王老师都去了，各种后悔没带相机去。</p>
-<p><img src="http://o7kolop30.bkt.clouddn.com/P1030796.jpg" alt="拍的太烂了加马赛克也没有影响啦"></p>
-<h1 id="Aug-17-22"><a href="#Aug-17-22" class="headerlink" title="Aug. 17-22"></a>Aug. 17-22</h1><p>这几天是湛江-海南自驾游，顺带到外头试用了一下 X100S。</p>
-<p>原本没打算这么早出门的，但是队伍里有人要回去搞同学聚会，又有人急着 20 多号要回去军训，于是就急急忙忙地出发了。嘛这次还是到那里住酒店跟亲戚吃吃饭浪费人生什么的。</p>
-<p>还去了去母上的旧居，要不是当时急着上厕所咱就下车拍几张照片去了。接着就去见了一位 95 岁的老人…额应该叫什么才对呢。</p>
-<p>[caption id=”” align=”alignnone” width=”500”]<img src="http://farm3.staticflickr.com/2810/9548397134_2cda9cb286.jpg" alt=""> 95 岁的老人家[/caption]</p>
-<p>接着咱就在她房子里的往某个洞里解决了问题</p>
-<p><img src="http://farm3.staticflickr.com/2877/9545678091_bd812e2dca.jpg" alt=""></p>
-<p>然后中途就坐火车渡轮去了去海南被宰。</p>
-<p>值得一提的是火车渡轮君真是一点也不晃啊。</p>
-<p>[caption id=”” align=”alignnone” width=”500”]<img src="http://farm4.staticflickr.com/3681/9571303032_361a0edc94.jpg" alt=""> 火车渡轮正在拉火车[/caption]</p>
-<p>&nbsp;</p>
-<p>[caption id=”” align=”alignnone” width=”500”]<img src="http://farm8.staticflickr.com/7327/9568521087_91a2fb80ff.jpg" alt=""> 没开空调人都到外面去了[/caption]</p>
-<p>至于海南就真的太无聊了，咱就去了一个叫博鳌的地方和三亚，由于没什么时间，大部分时间都在高速公路上跑<em>(:3 」∠)</em></p>
-<p>主要就是住了两天壕酒店.</p>
-<p>最终赶到在推友聚会前两天回到了家，然后咱就生病了。</p>
-<p>X100S 用起来还是挺好的，就是没有 GPS 有点蛋疼呢。整个旅程中咱都在用 EVF 取景，回来后试了试 OVF 感觉也非常有意思，就是手动对焦时没有合焦提示比较恼人，幸好开了「对焦确认」之后转对焦环就可以弹出 EVF 确认对焦了还算凑合能用。</p>
-<h1 id="Aug-23-25"><a href="#Aug-23-25" class="headerlink" title="Aug. 23-25"></a>Aug. 23-25</h1><p>23 号一早上出去喝茶就发现自己感冒了，没想到当天晚上就各种喉咙痛，还不断流口水整的我一整晚都睡不着，到了 24 号推聚时咱居然还特么的发烧了，于是当别人在女仆咖啡厅 Checkin 无视女仆讨论文件传输效率的时候咱就只能在医院 Checkin 了ಥ_ಥ</p>
-<p>打了两天吊针总算没什么事了。</p>
-<h1 id="Aug-27"><a href="#Aug-27" class="headerlink" title="Aug. 27"></a>Aug. 27</h1><p>母上约了咱小时候玩得不错的好久没见的女生一家出来喝茶，话说小学之后就没有见过了呢，以前都不觉得但好像是个吃货呢。然后听见他们说在办入台证母上又开始撩人家一起去台湾玩了。</p>
-<p>&nbsp;</p>
-<p>之后就大概没什么特别的事情了吧。</p>
-<p>&nbsp;</p>
-<h1 id="Movies-I’ve-watched-these-days"><a href="#Movies-I’ve-watched-these-days" class="headerlink" title="Movies I’ve watched these days:"></a>Movies I’ve watched these days:</h1><ol>
-<li><em>[<em>环太平洋 / Pacific Rim</em> / 悍战太平洋(港)](<a href="http://movie.douban.com/subject/5323968/">http://movie.douban.com/subject/5323968/</a>)</em></li>
-<li><a href="http://movie.douban.com/subject/10546007/"><em>全职猎人剧场版：绯色的幻影 / 劇場版 HUNTER×HUNTER 緋色の幻影</em> </a></li>
-<li><a href="http://movie.douban.com/subject/1966182/"><em>霍比特人1：意外之旅 / The Hobbit: An Unexpected Journey</em></a></li>
-<li><em><a href="http://movie.douban.com/subject/6869414/">青之驱魔师剧场版 / 青の祓魔師 劇場版</a></em><br>&nbsp;</li>
-</ol>
-<h1 id="Books-I’ve-read-these-days"><a href="#Books-I’ve-read-these-days" class="headerlink" title="Books I’ve read these days:"></a>Books I’ve read these days:</h1><p>无</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;不知不觉离暑假结束又剩下没几天了，整个暑假人品都差的要死，先是本来说好暑假出国玩的表妹那一行人又说不去了；然后说想去台湾玩，哪知道入台证办了一个星期每天都收到通知说有资料错了；再后来就是推友聚会那天发烧打吊针…&lt;/p&gt;
-&lt;p&gt;除了上述的各种不爽之外，咱这个暑假还是遇到了些不错的事情，比如说买到了&lt;del&gt;仿旁轴复古造型大底便携等效35mm定焦不可换镜无反数码相机&lt;/del&gt; X100S。还自己做了个 Wordpress 主题自己用。还有什么来着…现在回顾一下发现暑假都没做什么事情呢(´･ω･｀)&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
-    
-    
-      <category term="wordpress" scheme="http://intii.com/tags/wordpress/"/>
-    
-      <category term="X100S" scheme="http://intii.com/tags/X100S/"/>
-    
-      <category term="旅游" scheme="http://intii.com/tags/%E6%97%85%E6%B8%B8/"/>
     
   </entry>
   
