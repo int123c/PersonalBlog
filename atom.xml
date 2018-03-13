@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-03-13T04:30:56.787Z</updated>
+  <updated>2018-03-13T04:31:44.428Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -16,30 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>新头像，超清猎人</title>
-    <link href="http://intii.com/2018/avatar-uhd-hunter/"/>
-    <id>http://intii.com/2018/avatar-uhd-hunter/</id>
-    <published>2018-01-21T10:21:31.000Z</published>
-    <updated>2018-03-13T04:30:56.787Z</updated>
-    
-    <content type="html"><![CDATA[<p>热烈庆祝 MHW 面世。<br><a id="more"></a><br><img src="/media/avatar-uhd-hunter.jpg" alt="avatar-charge-blade-maste"></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;热烈庆祝 MHW 面世。&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
     <title>用 Blend Mode 来让 Navigation Bar 骚气起来</title>
-    <link href="http://intii.com/2017/decorate-uinavigationbar-with-blend-mode/"/>
-    <id>http://intii.com/2017/decorate-uinavigationbar-with-blend-mode/</id>
-    <published>2017-10-19T06:21:00.000Z</published>
-    <updated>2018-03-13T04:29:11.331Z</updated>
+    <link href="http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/"/>
+    <id>http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/</id>
+    <published>2018-03-13T06:21:00.000Z</published>
+    <updated>2018-03-13T04:31:44.428Z</updated>
     
     <content type="html"><![CDATA[<p>最近又在更新 Best Before.app，算是把同步写好了，但是还是打算顺便更新一下 UI。之前加入了自定义分类的功能，还允许用户给分类设置一个颜色，但是这个颜色却没有什么实际的作用，在这次更新中我打算在 Navigation Bar 上面显示出这个颜色。</p>
 <p><img src="http://o7kolop30.bkt.clouddn.com/old.png" width="375px" alt="old"/></p>
@@ -78,6 +59,25 @@
       <category term="Customization" scheme="http://intii.com/tags/Customization/"/>
     
       <category term="Blending Mode" scheme="http://intii.com/tags/Blending-Mode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>新头像，超清猎人</title>
+    <link href="http://intii.com/2018/avatar-uhd-hunter/"/>
+    <id>http://intii.com/2018/avatar-uhd-hunter/</id>
+    <published>2018-01-21T10:21:31.000Z</published>
+    <updated>2018-03-13T04:30:56.787Z</updated>
+    
+    <content type="html"><![CDATA[<p>热烈庆祝 MHW 面世。<br><a id="more"></a><br><img src="/media/avatar-uhd-hunter.jpg" alt="avatar-charge-blade-maste"></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;热烈庆祝 MHW 面世。&lt;br&gt;
+    
+    </summary>
+    
     
   </entry>
   
