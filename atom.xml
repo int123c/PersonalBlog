@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-03-13T04:31:44.428Z</updated>
+  <updated>2018-03-14T14:49:27.180Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/"/>
     <id>http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/</id>
     <published>2018-03-13T06:21:00.000Z</published>
-    <updated>2018-03-13T04:31:44.428Z</updated>
+    <updated>2018-03-14T14:49:27.180Z</updated>
     
     <content type="html"><![CDATA[<p>最近又在更新 Best Before.app，算是把同步写好了，但是还是打算顺便更新一下 UI。之前加入了自定义分类的功能，还允许用户给分类设置一个颜色，但是这个颜色却没有什么实际的作用，在这次更新中我打算在 Navigation Bar 上面显示出这个颜色。</p>
 <p><img src="http://o7kolop30.bkt.clouddn.com/old.png" width="375px" alt="old"/></p>
@@ -31,7 +31,7 @@
 <p><img src="http://o7kolop30.bkt.clouddn.com/new.png" width="375px" alt="new"/></p>
 <p>那 iOS 上是否有这样的功能呢。</p>
 <p>居然有，我们只需要在 <code>UINavigationBar</code> 上添加一个 <code>CALayer</code>，并将其的 <code>compositingFilter</code> 赋值为 <code>lightenBlendMode</code> 就可以了。同时还要 observe Navigation Bar 的 <code>frame</code> 以随着它的高度变动修改这个 layer 的 <code>path</code>。</p>
-<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">createNavigationBarBlending</span><span class="params">()</span></span> &#123;</div><div class="line">        blendLayer = &#123;</div><div class="line">            <span class="keyword">let</span> it = <span class="type">CAShapeLayer</span>()</div><div class="line">            it.compositingFilter = <span class="string">"lightenBlendMode"</span></div><div class="line">            navigationBar.layer.addSublayer(it)</div><div class="line">            <span class="keyword">let</span> observation = navigationBar.observe(\.frame) &#123; bar, <span class="number">_</span> <span class="keyword">in</span></div><div class="line">                it.path = <span class="type">UIBezierPath</span>(rect: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, </div><div class="line">                                                    width: <span class="number">50</span>, </div><div class="line">                                                    height: bar.frame.height)).cgPath</div><div class="line">            &#125;</div><div class="line">            disposables.append(observation)</div><div class="line">            <span class="keyword">return</span> it</div><div class="line">        &#125;()</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">createNavigationBarBlending</span><span class="params">()</span></span> &#123;</div><div class="line">    blendLayer = &#123;</div><div class="line">        <span class="keyword">let</span> it = <span class="type">CAShapeLayer</span>()</div><div class="line">        it.compositingFilter = <span class="string">"lightenBlendMode"</span></div><div class="line">        navigationBar.layer.addSublayer(it)</div><div class="line">        <span class="keyword">let</span> observation = navigationBar.observe(\.frame) &#123; bar, <span class="number">_</span> <span class="keyword">in</span></div><div class="line">            it.path = <span class="type">UIBezierPath</span>(rect: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, </div><div class="line">                                                width: <span class="number">50</span>, </div><div class="line">                                                height: bar.frame.height)).cgPath</div><div class="line">        &#125;</div><div class="line">        disposables.append(observation)</div><div class="line">        <span class="keyword">return</span> it</div><div class="line">    &#125;()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>最后我们只需要在显示分类列表时，修改 <code>blendLayer</code> 的 <code>fillColor</code> 就行了。值得一提的是 <code>UINavigationBar.frame</code> 恰好只包含到了 Large Title View，并不包括搜索框。</p>
 <p>当然如果再花些功夫，也还是能让它只覆盖到第一个字符的，但是也没必要了吧。</p>
 ]]></content>
