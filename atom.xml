@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-04-02T06:08:06.621Z</updated>
+  <updated>2018-04-02T06:14:02.814Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://intii.com/2018/how-to-reference-to-a-value-type-property/"/>
     <id>http://intii.com/2018/how-to-reference-to-a-value-type-property/</id>
     <published>2018-04-02T06:06:55.000Z</published>
-    <updated>2018-04-02T06:08:06.621Z</updated>
+    <updated>2018-04-02T06:14:02.814Z</updated>
     
     <content type="html"><![CDATA[<p>在更新 Best Before 的过程中，我决定重写 <code>ForwardStrategy</code> 的部分。过去 <code>ForwardStrategy</code> 中不同的转发目标所储存的信息其实是一样的，只是不同的转发目标会隐藏其不包含的属性。因此其对应的表单也是这样设计的，表单中其实包含了所有属性对应的 cell，但是在选中某些目标时，其中一些 cell 被隐藏起来了。</p>
 <p>举个例子吧：比如说我们有 Things 和 Mail 两种转发目标，当我们选中 Things 时，因为它并没有收件人，所以其对应的 cell 被隐藏起来了。当我们切换到 Mail，收件人就得以重见天日，但截止日期却被隐藏起来了。这个方案当然是 work 的，但是却有一个明显的缺点，一旦我们需要添加新的转发目标，或更新旧有的转发目标时出现了新的属性时，我们就需要修改模型，并在表单中增加新的 cell 了。</p>
@@ -43,6 +43,8 @@
 <p>我们在 block 里通过 capture list 弱引用 <code>object</code>，因为这么写了，所以我们要求 <code>O: AnyObject</code>。最后 Key Path 这种这么方便的东西，我们也可以提供一个 convenience initializer。</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">convenience</span> <span class="keyword">init</span>(<span class="number">_</span> object: <span class="type">O</span>, <span class="number">_</span> keyPath: <span class="type">ReferenceWritableKeyPath</span>&lt;<span class="type">O</span>, <span class="type">V</span>&gt;) &#123;</div><div class="line">    <span class="keyword">self</span>.<span class="keyword">init</span>(object, getter: &#123; $<span class="number">0</span>[keyPath: keyPath] &#125;, setter: &#123; $<span class="number">0</span>[keyPath: keyPath] = $<span class="number">1</span> &#125; )</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>至此我们就能获得一个 <code>AnyObject</code> 的非引用类型的属性的引用啦。</p>
+<p>随后代码就可以写成</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.highlightTextView(</div><div class="line">    title: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.notes, </div><div class="line">    placeholder: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.notesPlaceholder, </div><div class="line">    bind: <span class="type">PropertyRef</span>(<span class="keyword">self</span>, \.notes)),</div><div class="line">.picker(</div><div class="line">    title: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.deadline, </div><div class="line">    options: <span class="type">DeadlineType</span>.allTitles,</div><div class="line">    bind: <span class="type">PropertyRef</span>(<span class="keyword">self</span>, getter: &#123; $<span class="number">0</span>.deadlineType.identifier &#125;                                          </div><div class="line">                            setter: &#123; $<span class="number">0</span>.deadlineType = <span class="type">DeadlineType</span>(identifier: $<span class="number">1</span>) &#125;)),</div></pre></td></tr></table></figure>
 ]]></content>
     
     <summary type="html">
