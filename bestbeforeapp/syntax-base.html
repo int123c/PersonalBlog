@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="X-UA-Compatible" content="IE=edge">
+        <title>Best Before Syntax Cheatsheet</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+        <main class="container">
+            <div class="syntax-block">
+                <p class="syntax-placeholder blue">{ItemName}</p>
+                <p class="syntax-description">Prints the name of the forwarding/sharing item.</p>
+                <p class="syntax-example">Eg. Apple</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder green">{TimeLeft}</p>
+                <p class="syntax-description">Prints the number of days before best before date.</p>
+                <p class="syntax-example">Eg. 20 days</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder green">{BestBeforeDate}</p>
+                <p class="syntax-description">Prints the best before date of the item in default format yyyy-MM-dd.</p>
+                <p class="syntax-example">Eg. 2048-2-31</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder green">{BestBeforeDate:yyyy:MM:dd}</p>
+                <p class="syntax-description">Prints the best before date of the item in format yyyy:MM:dd.</p>
+                <p class="syntax-example">Eg. 2048:2:31</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder purple">{Freshness}</p>
+                <p class="syntax-description">Prints freshness of item.</p>
+                <p class="syntax-example">Eg. Expired Recently</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder blue">{Category}</p>
+                <p class="syntax-description">Prints category of item.</p>
+                <p class="syntax-example">Eg. Food</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder blue">{Action}</p>
+                <p class="syntax-description">Prints action to take for item.</p>
+                <p class="syntax-example">Eg. Renew/Restock</p>
+            </div>
+            <div class="syntax-block">
+                <p class="syntax-placeholder red">{SomethingElse}</p>
+                <p class="syntax-description">Prints the placeholder itself.</p>
+                <p class="syntax-example">Eg. {SomethingElse}</p>
+            </div>
+        </main>
+        <footer>
+            <div class="update-date"><p>Last Update on 2017-7-17.</p></div>
+        </footer>
+        <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create',"UA-17603222-1",'auto');ga('send','pageview');</script>
+    </body>
+</html>
