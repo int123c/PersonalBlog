@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-04-02T05:57:26.605Z</updated>
+  <updated>2018-04-02T06:08:06.621Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -16,22 +16,13 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title></title>
-    <link href="http://intii.com/2018/reference-to-a-value-type-property/"/>
-    <id>http://intii.com/2018/reference-to-a-value-type-property/</id>
-    <published>2018-04-02T03:45:56.123Z</published>
-    <updated>2018-04-02T05:57:26.605Z</updated>
+    <title>如何引用一个值类型属性</title>
+    <link href="http://intii.com/2018/how-to-reference-to-a-value-type-property/"/>
+    <id>http://intii.com/2018/how-to-reference-to-a-value-type-property/</id>
+    <published>2018-04-02T06:06:55.000Z</published>
+    <updated>2018-04-02T06:08:06.621Z</updated>
     
-    <content type="html"><![CDATA[<hr>
-<p>title: 如何引用一个值类型属性<br>date: 2018-4-2 13:21:00<br>tags: </p>
-<pre><code>- Swift
-- iOS
-- KeyPath
-- ReferenceWritableKeyPath
-- Reference
-- Value Type
-</code></pre><hr>
-<p>在更新 Best Before 的过程中，我决定重写 <code>ForwardStrategy</code> 的部分。过去 <code>ForwardStrategy</code> 中不同的转发目标所储存的信息其实是一样的，只是不同的转发目标会隐藏其不包含的属性。因此其对应的表单也是这样设计的，表单中其实包含了所有属性对应的 cell，但是在选中某些目标时，其中一些 cell 被隐藏起来了。</p>
+    <content type="html"><![CDATA[<p>在更新 Best Before 的过程中，我决定重写 <code>ForwardStrategy</code> 的部分。过去 <code>ForwardStrategy</code> 中不同的转发目标所储存的信息其实是一样的，只是不同的转发目标会隐藏其不包含的属性。因此其对应的表单也是这样设计的，表单中其实包含了所有属性对应的 cell，但是在选中某些目标时，其中一些 cell 被隐藏起来了。</p>
 <p>举个例子吧：比如说我们有 Things 和 Mail 两种转发目标，当我们选中 Things 时，因为它并没有收件人，所以其对应的 cell 被隐藏起来了。当我们切换到 Mail，收件人就得以重见天日，但截止日期却被隐藏起来了。这个方案当然是 work 的，但是却有一个明显的缺点，一旦我们需要添加新的转发目标，或更新旧有的转发目标时出现了新的属性时，我们就需要修改模型，并在表单中增加新的 cell 了。</p>
 <p>因此在这次更新中，我决定将转发目标的属性以 JSON 为格式储存，这也避免了不同转发目标混用属性的尴尬。表单方面也需要作出修改。窒息观察可以发现，这些属性有几个固定的类型：</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">enum</span> <span class="title">ForwardFormElement</span> </span>&#123;</div><div class="line">    <span class="keyword">case</span> highlightTextView(title: <span class="type">String</span>, placeholder: <span class="type">String</span>?, bind: <span class="type">PropertyRefTo</span>&lt;<span class="type">String</span>&gt;)</div><div class="line">    <span class="keyword">case</span> textView(title: <span class="type">String</span>, placeholder: <span class="type">String</span>?, bind: <span class="type">PropertyRefTo</span>&lt;<span class="type">String</span>&gt;)</div><div class="line">    <span class="keyword">case</span> textField(title: <span class="type">String</span>, placeholder: <span class="type">String</span>?, keyboardType: <span class="type">UIKeyboardType</span>, bind: <span class="type">PropertyRefTo</span>&lt;<span class="type">String</span>&gt;)</div><div class="line">    <span class="keyword">case</span> picker(title: <span class="type">String</span>, options: [<span class="type">String</span>], bind: <span class="type">PropertyRefTo</span>&lt;<span class="type">Int</span>&gt;)</div><div class="line">    <span class="keyword">case</span> toggle(title: <span class="type">String</span>, bind: <span class="type">PropertyRefTo</span>&lt;<span class="type">Bool</span>&gt;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -56,16 +47,7 @@
     
     <summary type="html">
     
-      &lt;hr&gt;
-&lt;p&gt;title: 如何引用一个值类型属性&lt;br&gt;date: 2018-4-2 13:21:00&lt;br&gt;tags: &lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;- Swift
-- iOS
-- KeyPath
-- ReferenceWritableKeyPath
-- Reference
-- Value Type
-&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;
-&lt;p&gt;在更新 Best Before 的过程中，我决定重写 &lt;code&gt;ForwardStrategy&lt;/code&gt; 的部分。过去 &lt;code&gt;ForwardStrategy&lt;/code&gt; 中不同的转发目标所储存的信息其实是一样的，只是不同的转发目标会隐藏其不包含的属性。因此其对应的表单也是这样设计的，表单中其实包含了所有属性对应的 cell，但是在选中某些目标时，其中一些 cell 被隐藏起来了。&lt;/p&gt;
+      &lt;p&gt;在更新 Best Before 的过程中，我决定重写 &lt;code&gt;ForwardStrategy&lt;/code&gt; 的部分。过去 &lt;code&gt;ForwardStrategy&lt;/code&gt; 中不同的转发目标所储存的信息其实是一样的，只是不同的转发目标会隐藏其不包含的属性。因此其对应的表单也是这样设计的，表单中其实包含了所有属性对应的 cell，但是在选中某些目标时，其中一些 cell 被隐藏起来了。&lt;/p&gt;
 &lt;p&gt;举个例子吧：比如说我们有 Things 和 Mail 两种转发目标，当我们选中 Things 时，因为它并没有收件人，所以其对应的 cell 被隐藏起来了。当我们切换到 Mail，收件人就得以重见天日，但截止日期却被隐藏起来了。这个方案当然是 work 的，但是却有一个明显的缺点，一旦我们需要添加新的转发目标，或更新旧有的转发目标时出现了新的属性时，我们就需要修改模型，并在表单中增加新的 cell 了。&lt;/p&gt;
 &lt;p&gt;因此在这次更新中，我决定将转发目标的属性以 JSON 为格式储存，这也避免了不同转发目标混用属性的尴尬。表单方面也需要作出修改。窒息观察可以发现，这些属性有几个固定的类型：&lt;/p&gt;
 &lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;ForwardFormElement&lt;/span&gt; &lt;/span&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; highlightTextView(title: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;, placeholder: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;?, bind: &lt;span class=&quot;type&quot;&gt;PropertyRefTo&lt;/span&gt;&amp;lt;&lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;&amp;gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; textView(title: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;, placeholder: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;?, bind: &lt;span class=&quot;type&quot;&gt;PropertyRefTo&lt;/span&gt;&amp;lt;&lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;&amp;gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; textField(title: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;, placeholder: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;?, keyboardType: &lt;span class=&quot;type&quot;&gt;UIKeyboardType&lt;/span&gt;, bind: &lt;span class=&quot;type&quot;&gt;PropertyRefTo&lt;/span&gt;&amp;lt;&lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;&amp;gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; picker(title: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;, options: [&lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;], bind: &lt;span class=&quot;type&quot;&gt;PropertyRefTo&lt;/span&gt;&amp;lt;&lt;span class=&quot;type&quot;&gt;Int&lt;/span&gt;&amp;gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; toggle(title: &lt;span class=&quot;type&quot;&gt;String&lt;/span&gt;, bind: &lt;span class=&quot;type&quot;&gt;PropertyRefTo&lt;/span&gt;&amp;lt;&lt;span class=&quot;type&quot;&gt;Bool&lt;/span&gt;&amp;gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
@@ -73,6 +55,18 @@
     
     </summary>
     
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="KeyPath" scheme="http://intii.com/tags/KeyPath/"/>
+    
+      <category term="ReferenceWritableKeyPath" scheme="http://intii.com/tags/ReferenceWritableKeyPath/"/>
+    
+      <category term="Reference" scheme="http://intii.com/tags/Reference/"/>
+    
+      <category term="Value Type" scheme="http://intii.com/tags/Value-Type/"/>
     
   </entry>
   
