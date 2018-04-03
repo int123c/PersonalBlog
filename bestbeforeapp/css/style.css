@@ -1,5 +1,5 @@
 body {
-    font-family: "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei UI", "Microsoft YaHei", "Source Han Sans", sans-serif;
+    font-family: sans-serif;
     font-size: 16px;
     background-color: #F4F4F4;
     color: #444;
@@ -7,7 +7,6 @@ body {
 
 .container {
     margin: 0 auto;
-    width: 90%; 
 }
 
 .syntax-block {
@@ -22,7 +21,7 @@ body {
 
 .syntax-placeholder {
     font-size: 20px;
-    font-family: Monaco, 'Lucida Console', courier, monospace;
+    font-family: monospace;
 }
 
 .update-date {
@@ -46,4 +45,28 @@ body {
 
 .green {
     color: #91C389;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.monospace {
+    font-family: monospace;
+}
+
+.change-block {
+    padding: 20px 20px;
+    margin: 10px;
+    border-radius: 4px;
+    background-color: #FAFAFA;
+    overflow: auto;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.125)
+}
+
+version {
+    font-family: monospace;
+    color: gray;
+    margin: 1em 0;
+    display: inline-block;
 }
