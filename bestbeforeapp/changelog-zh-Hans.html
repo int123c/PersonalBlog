@@ -2,7 +2,7 @@
 
 <head>
 <meta charset="utf-8">
-<title>## Best Before 1.2.1</title>
+<title>## 1.2.1</title>
 <style>
 @font-face {
   font-family: octicons-anchor;
@@ -838,7 +838,7 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </style>
 
 <style> @media print{ .hljs{overflow: visible; word-wrap: break-word !important;} }</style></head><body><div class="markdown-body">
-<h2 id="toc_0">Best Before 1.2.1</h2>
+<h2 id="toc_0">1.2.1</h2>
 
 <p>这次更新主要包含了条码扫描和一些严重 bug 的修复。</p>
 
@@ -874,6 +874,39 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </ul>
 
 <p>十分抱歉写了这些 Bug。如果您还发现了别的 Bug 希望能通过邮件告知，发送至 <a href="mailto:bestbefore@intii.com">bestbefore@intii.com</a>。您也可以在设置里通过“支持”给我发送邮件。</p>
+
+<h2 id="toc_3">1.2.0</h2>
+
+<h3 id="toc_4">新增内容</h3>
+
+<ul>
+<li>增加了同步功能。该功能尚未经过详尽的测试，如果您遇到了什么问题，可以在设置中把它关掉。</li>
+<li>修改了 UI。
+
+<ul>
+<li>物品分类的对应颜色能够在列表中看到</li>
+<li>取消了下拉触发动作的导航栏</li>
+<li>微调了所有的颜色</li>
+</ul></li>
+<li>重写了转发策略，您需要重新设置转发策略。支持了 Things 最新的 URL Scheme。</li>
+<li>增加了分类转发策略，设置为“无”时将会使用全局转发策略。</li>
+<li>增加了少数 URL Scheme。
+
+<ul>
+<li>bestbefore:///item/add</li>
+<li>bestbefore:///itemKind/:nameOrId/renew</li>
+<li>bestbefore:///item/:id/detail</li>
+</ul></li>
+<li>增加了相应的转发策略占位符。</li>
+<li>新的 Bug</li>
+</ul>
+
+<h3 id="toc_5">修复的 Bug</h3>
+
+<ul>
+<li>部分转场动画不流畅。</li>
+<li>以及一些别的问题。</li>
+</ul>
 
 </div></body>
 
