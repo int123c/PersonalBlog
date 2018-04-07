@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content=" width=device-width, initial-scale=1">
-<title>## 1.2.3</title>
+<title># Frequently Asked Questions</title>
 <style>
 @font-face {
   font-family: octicons-anchor;
@@ -839,96 +839,23 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </style>
 
 <style> @media print{ .hljs{overflow: visible; word-wrap: break-word !important;} }</style></head><body><div class="markdown-body">
-<h2 id="toc_0">1.2.3</h2>
+<h1 id="toc_0">Frequently Asked Questions</h1>
 
-<p>Sorry for so many new bugs. This update includes a critical bug fix that prevents category creations.</p>
+<h2 id="toc_1">Q：Why is the update rate of this app so weird</h2>
 
-<h2 id="toc_1">1.2.2</h2>
+<p>This app is a hobby (practice oriented) project that I do only when I have time. I can&#39;t promise that it will be updated frequently. And I can&#39;t make promises on new features. This app will keep getting updates, but it may also keep getting new bugs since I will occasionally rewrite a part of it for practice. If you find any new bug, I am sorry, and I will try my best to fix it asap.</p>
 
-<p>This update includes a few bug fixes from previous update.</p>
+<h2 id="toc_2">Q：Why can&#39;t the app just scan a barcode and do everything else</h2>
 
-<ul>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked />  Slightly decrease item list font size.
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Fix that some settings field don&#39;t reflect the real settings.
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Fix that some text not displayed correctly
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Other minor fixes.
-</li>
-</ul>
+<p>Barcode contains a identifier for a kind of item, we sadly can&#39;t get any date information from it. The only useful information that we can get is the name of item, but this information is usually not free to get.</p>
 
-<h2 id="toc_2">1.2.1</h2>
+<h2 id="toc_3">Feature Request: Add image to item</h2>
 
-<p>This update includes barcode scanner support and bug fixes.</p>
+<p>It&#39;s planned, but I can&#39;t guarenttee anything.</p>
 
-<h3 id="toc_3">What&#39;s New</h3>
+<h2 id="toc_4">Feature Request: Share item lists with other</h2>
 
-<ul>
-<li>Barcode scanner. Long press add button to scan.</li>
-</ul>
-
-<blockquote>
-<p>This may not be the barcode scanner you are looking for, all barcodes should be added by yourselves, so it&#39;s only a quick way to renew/restock items.</p>
-
-<p>I can only provide a barcode scanner at this level, because barcode on the back of your package, contains only a identifier of a kind of item. <strong>All we can get from it that&#39;s useful is the name</strong>, if we have a correct database for that. Sadly this kind of databases are always paid, not worthy when you only want the name.</p>
-
-<p>We can&#39;t get production dates or any other dates from a barcode, so automatically instocking is just not possible, even if I pay for a database.</p>
-</blockquote>
-
-<ul>
-<li>3D Touch shortcut for barcode scan.</li>
-<li>Allow setting alarm date between <u>1 day after best before date</u> and <u>right on best before date</u>. In settings.</li>
-<li>Allow regenerating all notifications, if you just can&#39;t recieve any <strong>(If the notify time is in your do not disturb range, you will not be notified)</strong> In settings.</li>
-<li>Text views in forward strategy settings now supports multiple-line.</li>
-<li>Delete item is renamed to archive. Yes they were not deleted at all, I will provide an archive view in future updates.</li>
-<li>Allow production date later than today. Useful when you are renewing your domain name ahead of time.</li>
-</ul>
-
-<h3 id="toc_4">Bug Fixes</h3>
-
-<ul>
-<li>Fix a bug that crashes the app in edit or renew view</li>
-<li>Fix a bug that may crash the app when user searching for items, and receives synced updates at the same time.</li>
-<li>Fix that sync is defaultly on for users that are not signed in into iCloud.</li>
-<li>Fix that in-stock strategy for item kind not correctly generated.</li>
-<li>Fix item detail texts.</li>
-</ul>
-
-<p>Sorry for these bugs. If you find any other bug, please let me know by sending me email at bestbefore@intii.com. You can do that right from settings.</p>
-
-<h2 id="toc_5">1.2.0</h2>
-
-<h3 id="toc_6">What&#39;s New</h3>
-
-<ul>
-<li>Sync. Sync is not well tested. If you see any problem, you can turn it off in settings.</li>
-<li>Updates on UI
-
-<ul>
-<li>Display category color in item list</li>
-<li>Remove pull-down-to-action navigation bar</li>
-<li>Tweaked all colors</li>
-</ul></li>
-<li>Rewritten forward strategy. You will need to re-set your universal forward strategy. Supports new Things URL Schemes.</li>
-<li>Add category specific forward strategy. Setting to &quot;None&quot; will fall back to the universal one.</li>
-<li>Supports a few URL Schemes.
-
-<ul>
-<li><code>bestbefore:///item/add</code></li>
-<li><code>bestbefore:///itemKind/:nameOrId/renew</code></li>
-<li><code>bestbefore:///item/:id/detail</code></li>
-</ul></li>
-<li>Add corresponding placeholders to forward strategy settings</li>
-<li>New bugs</li>
-</ul>
-
-<h3 id="toc_7">Bug Fixes</h3>
-
-<ul>
-<li>Transition animations that didn&#39;t feel right.</li>
-<li>And some other issues.</li>
-</ul>
+<p>It&#39;s planned, but I can&#39;t guarenttee anything.</p>
 
 </div></body>
 

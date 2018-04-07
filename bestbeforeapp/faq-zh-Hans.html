@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content=" width=device-width, initial-scale=1">
-<title>## 1.2.3</title>
+<title># 常见问题</title>
 <style>
 @font-face {
   font-family: octicons-anchor;
@@ -839,96 +839,23 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 </style>
 
 <style> @media print{ .hljs{overflow: visible; word-wrap: break-word !important;} }</style></head><body><div class="markdown-body">
-<h2 id="toc_0">1.2.3</h2>
+<h1 id="toc_0">常见问题</h1>
 
-<p>Sorry for so many new bugs. This update includes a critical bug fix that prevents category creations.</p>
+<h2 id="toc_1">Q：这个 app 更新频率怎么这么奇怪？</h2>
 
-<h2 id="toc_1">1.2.2</h2>
+<p>这个 app 是我的一个业余（练习向）项目，是我抽出业余时间制作的，所以并不能保证它有一个稳定的更新频率，也不好保证它一定会有些什么新的功能。但作为一个练习向项目，这个项目会一直更新下去。只是我会不定期的尝试一些新的写法，重写一部分内容，如果我因此写出了什么新的 bug 尽请原谅，我会尽快修复。</p>
 
-<p>This update includes a few bug fixes from previous update.</p>
+<h2 id="toc_2">Q：为什么不能扫码自动添加物品？</h2>
 
-<ul>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked />  Slightly decrease item list font size.
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Fix that some settings field don&#39;t reflect the real settings.
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Fix that some text not displayed correctly
-</li>
-<li class="task-list-item"><input disabled="disabled" type="checkbox" checked /> Other minor fixes.
-</li>
-</ul>
+<p>因为商品条形码是一个种类的物品的辨识码，不同生产日期的同一种商品它们的条形码可能是一致的。换句话说我们并不能从条形码中获得日期类的信息。而其它的信息，譬如商品名称，通常也需要通过一些收费的数据库或接口才能够获得。</p>
 
-<h2 id="toc_2">1.2.1</h2>
+<h2 id="toc_3">新功能需求：添加图片</h2>
 
-<p>This update includes barcode scanner support and bug fixes.</p>
+<p>已在计划当中，但没发作保证。</p>
 
-<h3 id="toc_3">What&#39;s New</h3>
+<h2 id="toc_4">新功能需求：共同编辑物品列表</h2>
 
-<ul>
-<li>Barcode scanner. Long press add button to scan.</li>
-</ul>
-
-<blockquote>
-<p>This may not be the barcode scanner you are looking for, all barcodes should be added by yourselves, so it&#39;s only a quick way to renew/restock items.</p>
-
-<p>I can only provide a barcode scanner at this level, because barcode on the back of your package, contains only a identifier of a kind of item. <strong>All we can get from it that&#39;s useful is the name</strong>, if we have a correct database for that. Sadly this kind of databases are always paid, not worthy when you only want the name.</p>
-
-<p>We can&#39;t get production dates or any other dates from a barcode, so automatically instocking is just not possible, even if I pay for a database.</p>
-</blockquote>
-
-<ul>
-<li>3D Touch shortcut for barcode scan.</li>
-<li>Allow setting alarm date between <u>1 day after best before date</u> and <u>right on best before date</u>. In settings.</li>
-<li>Allow regenerating all notifications, if you just can&#39;t recieve any <strong>(If the notify time is in your do not disturb range, you will not be notified)</strong> In settings.</li>
-<li>Text views in forward strategy settings now supports multiple-line.</li>
-<li>Delete item is renamed to archive. Yes they were not deleted at all, I will provide an archive view in future updates.</li>
-<li>Allow production date later than today. Useful when you are renewing your domain name ahead of time.</li>
-</ul>
-
-<h3 id="toc_4">Bug Fixes</h3>
-
-<ul>
-<li>Fix a bug that crashes the app in edit or renew view</li>
-<li>Fix a bug that may crash the app when user searching for items, and receives synced updates at the same time.</li>
-<li>Fix that sync is defaultly on for users that are not signed in into iCloud.</li>
-<li>Fix that in-stock strategy for item kind not correctly generated.</li>
-<li>Fix item detail texts.</li>
-</ul>
-
-<p>Sorry for these bugs. If you find any other bug, please let me know by sending me email at bestbefore@intii.com. You can do that right from settings.</p>
-
-<h2 id="toc_5">1.2.0</h2>
-
-<h3 id="toc_6">What&#39;s New</h3>
-
-<ul>
-<li>Sync. Sync is not well tested. If you see any problem, you can turn it off in settings.</li>
-<li>Updates on UI
-
-<ul>
-<li>Display category color in item list</li>
-<li>Remove pull-down-to-action navigation bar</li>
-<li>Tweaked all colors</li>
-</ul></li>
-<li>Rewritten forward strategy. You will need to re-set your universal forward strategy. Supports new Things URL Schemes.</li>
-<li>Add category specific forward strategy. Setting to &quot;None&quot; will fall back to the universal one.</li>
-<li>Supports a few URL Schemes.
-
-<ul>
-<li><code>bestbefore:///item/add</code></li>
-<li><code>bestbefore:///itemKind/:nameOrId/renew</code></li>
-<li><code>bestbefore:///item/:id/detail</code></li>
-</ul></li>
-<li>Add corresponding placeholders to forward strategy settings</li>
-<li>New bugs</li>
-</ul>
-
-<h3 id="toc_7">Bug Fixes</h3>
-
-<ul>
-<li>Transition animations that didn&#39;t feel right.</li>
-<li>And some other issues.</li>
-</ul>
+<p>已在计划当中，但没发作保证。</p>
 
 </div></body>
 
