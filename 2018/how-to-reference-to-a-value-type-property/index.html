@@ -22,8 +22,9 @@
 <p>随后代码就可以写成</p>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.highlightTextView(</div><div class="line">    title: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.notes, </div><div class="line">    placeholder: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.notesPlaceholder, </div><div class="line">    bind: <span class="type">PropertyRef</span>(<span class="keyword">self</span>, \.notes)),</div><div class="line">.picker(</div><div class="line">    title: <span class="type">Localized</span>.<span class="type">This</span>.<span class="type">Form</span>.<span class="type">Things</span>.deadline, </div><div class="line">    options: <span class="type">DeadlineType</span>.allTitles,</div><div class="line">    bind: <span class="type">PropertyRef</span>(<span class="keyword">self</span>, getter: &#123; $<span class="number">0</span>.deadlineType.identifier &#125;</div><div class="line">                            setter: &#123; $<span class="number">0</span>.deadlineType = <span class="type">DeadlineType</span>(identifier: $<span class="number">1</span>) &#125;)),</div></pre></td></tr></table></figure>
 </div></article></div></main><footer><div class="paginator"><a href="/2018/decorate-uinavigationbar-with-blend-mode/" class="next">Next Post →</a></div><div id="container"></div><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"><script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script><script>var gitment = new Gitment({
+  id: ''
   owner: 'int123c',
-  repo: 'blog-comment',
+  repo: 'int123c.github.io',
   oauth: {
     client_id: 'efccd5f0aa425a6453e4',
     client_secret: 'd886480b3ac601b49591d7d457cafaeefbe546c1',
