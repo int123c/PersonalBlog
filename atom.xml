@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-06-12T15:23:46.166Z</updated>
+  <updated>2018-06-29T16:26:40.696Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -16,11 +16,92 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>通过 Sourcery 来写 API Client</title>
+    <link href="http://intii.com/2018/write-api-client-with-sourcery/"/>
+    <id>http://intii.com/2018/write-api-client-with-sourcery/</id>
+    <published>2018-06-25T03:21:00.000Z</published>
+    <updated>2018-06-29T16:26:40.696Z</updated>
+    
+    <content type="html"><![CDATA[<p>我不太喜欢现在公司项目中 API Client 的实现方式，虽然并没有什么问题，但我还是忍不住要重构一下。原本的实现是这样的：</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SomeModel</span></span></div><div class="line"></div><div class="line">+ (<span class="keyword">void</span>)doSomething:(<span class="built_in">NSString</span> *)aParam completion:(<span class="keyword">void</span>(^)(<span class="built_in">BOOL</span> isSuccess, <span class="built_in">NSString</span> *errorMessage, SomeModel * someModel))completion &#123;</div><div class="line">    [APIClient.sharedClient </div><div class="line">        POST:someEndpoint</div><div class="line">        parameters: @&#123; <span class="string">@"p"</span>: aParam &#125;</div><div class="line">        success:^(<span class="built_in">NSURLSessionDataTask</span> * _Nonnull task, <span class="keyword">id</span>  _Nullable responseObject) &#123;</div><div class="line">            PPApiResponseObject *responseItem = [PPApiResponseObject createFrom:responseObject];</div><div class="line">            <span class="keyword">if</span> (responseItem.isSuccess) &#123;</div><div class="line">                <span class="comment">// do something</span></div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// do something</span></div><div class="line">        &#125;</div><div class="line">        failure:^(<span class="built_in">NSURLSessionDataTask</span> * _Nullable task, <span class="built_in">NSError</span> * _Nonnull error) &#123;</div><div class="line">            <span class="comment">// do something</span></div><div class="line">        &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">@end</span></div></pre></td></tr></table></figure>
+<p>这里有几个地方是我不喜欢的：1. 用 Objective C 写的；2. API 不太现代；3. endpoint 分散在了不同的 model 定义里面；4. 重复的东西太多。</p>
+<a id="more"></a>
+<h2 id="构思"><a href="#构思" class="headerlink" title="构思"></a>构思</h2><p>这次重构我不想有太大的改动，所以 <code>[APIClient.sharedClient...]</code> 那部分我是会保留的，同时我也需要支持 Objective C，于是用 enum 来表示 endpoint 这种事情肯定是做不到的了。为了能好好利用自动补全，我还是会采用方法来实现每一个 endpoint，只是这次我们会把它们都放在一个类里，就叫作 <code>API</code> 吧。</p>
+<p>事实上这些方法的实现都大同小异，这种情况就特别适合使用元编程了，我希望我能够以 declarative 的方式定义一个 endpoint，然后再通过 Sourcery 来自动生成代码。我希望这个定义是这个样子的：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">API</span>: <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">ProductSearch</span>: <span class="title">APIEndPoint</span> </span>&#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">let</span> endpoint = <span class="string">"/app/search"</span></div><div class="line">        </div><div class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">RequestBody</span> </span>&#123;</div><div class="line">            <span class="keyword">let</span> keyword: <span class="type">String</span></div><div class="line">            <span class="keyword">let</span> page: <span class="type">Int</span></div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ResponseBody</span>: <span class="title">ResponseBodyType</span> </span>&#123;</div><div class="line">            <span class="keyword">let</span> totalCount: <span class="type">Int</span></div><div class="line">            <span class="keyword">let</span> products: [<span class="type">Product</span>]; <span class="class"><span class="keyword">struct</span> <span class="title">Product</span>: <span class="title">ResponseBodyType</span> </span>&#123;</div><div class="line">                <span class="keyword">let</span> productId: <span class="type">Int</span></div><div class="line">                <span class="keyword">let</span> productName: <span class="type">String</span></div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这就和我们的 API 文档一模一样，<code>APIEndPoint</code> 是一个 protocol，一方面可以指导我定义一个 endpoint，另一方面，可以告诉 Sourcery 我们都有哪一些 endpoint 需要生成代码。实现 <code>ResponseBodyType</code> 的类型需要同时实现 <code>Codable</code>，这样我们就能将 JSON 转化为 Model 了。这同时也能够告诉 Sourcery，有哪一些类型我们需要提供一个 Objective C 可以理解的版本，毕竟无论是嵌套类型还是 struct，Objective C 都是不认的。</p>
+<p>我决定用一个 class 把它包住。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">API_ProductSearch_ResponseBody</span>: <span class="title">NSObject</span> </span>&#123;</div><div class="line">    <span class="keyword">let</span> body: <span class="type">API</span>.<span class="type">ProductSearch</span>.<span class="type">ResponseBody</span></div><div class="line">    <span class="keyword">init</span>(body: <span class="type">API</span>.<span class="type">ProductSearch</span>.<span class="type">ResponseBody</span>) &#123; <span class="keyword">self</span>.body = body &#125;</div><div class="line"></div><div class="line">    <span class="meta">@objc</span> <span class="keyword">var</span> totalCount: <span class="type">Int</span> &#123;</div><div class="line">        <span class="keyword">return</span> body.totalCount</div><div class="line">    &#125;</div><div class="line">    <span class="meta">@objc</span> <span class="keyword">var</span> product: [<span class="type">API_ProductSearch_ResponseBody_Product</span>] &#123;</div><div class="line">        <span class="keyword">return</span> body.product.<span class="built_in">map</span>(<span class="type">API_ProductSearch_ResponseBody_Product</span>.<span class="keyword">init</span>(body:))</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现部分，我希望和原本差不多，但 completion handler 的参数是一个 <code>enum Result&lt;Body&gt;</code>：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">productSearch</span><span class="params">(</div><div class="line">    keyword: String,</div><div class="line">    page: Int,</div><div class="line">    <span class="number">_</span> completion: @escaping <span class="params">(Result&lt;API.ProductSearch.ResponseBody&gt;)</span></span></span>-&gt;<span class="type">Void</span> = &#123;<span class="number">_</span> <span class="keyword">in</span>&#125;) -&gt; <span class="type">URLSessionDataTask</span>? &#123;</div><div class="line">    <span class="comment">// prepare paramenter dictionary</span></div><div class="line">    <span class="keyword">return</span> <span class="type">APIClient</span>.sharedClient().post(<span class="type">API</span>.<span class="type">ProductSearch</span>.endpoint, </div><div class="line">            parameters: param,</div><div class="line">            success:&#123; task, responseObject <span class="keyword">in</span></div><div class="line">                <span class="comment">// do something</span></div><div class="line">            &#125;, failure:&#123; task, error <span class="keyword">in</span></div><div class="line">                <span class="comment">// do something</span></div><div class="line">            &#125;)</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>当然还需要一个 Objective C 的版本，自然也就不能用 <code>Result</code> 了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@objc</span> <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">post_productSearch</span><span class="params">(</div><div class="line">    keyword: String,</div><div class="line">    page: Int,</div><div class="line">    <span class="number">_</span> completion: @escaping <span class="params">(API_ProductSearch_ResponseBody?, NSError?)</span></span></span>-&gt;<span class="type">Void</span> = &#123;<span class="number">_</span>, <span class="number">_</span> <span class="keyword">in</span>&#125;) -&gt; <span class="type">URLSessionDataTask</span>?</div></pre></td></tr></table></figure>
+<p>既然大致的方向决定了，接下来就是写模板了。</p>
+<h2 id="写模板"><a href="#写模板" class="headerlink" title="写模板"></a>写模板</h2><p><span style="color: #680000">❖ 因为 Hexo 会尝试去解析 stencil 模板，所以文章中用 {٪ 来防止解析发生。</span></p>
+<h3 id="适配-Objective-C"><a href="#适配-Objective-C" class="headerlink" title="适配 Objective C"></a>适配 Objective C</h3><p>写这个部分的模板还是比较烦人的，因为 Objective C 并不支持 Swift 里面的所有类型。</p>
+<p>首先是提供 Objective C 可以理解的 response body。就像之前所说的那样，我们只需要让一个 class 把每一个实现 <code>ResponseBodyType</code> 的类型包起来就行了：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;٪<span class="keyword">for</span> responseBody <span class="keyword">in</span> types.all <span class="keyword">where</span> responseBody.implements.<span class="type">ResponseBodyType</span>%&#125;</div><div class="line"><span class="class"><span class="keyword">class</span> </span>&#123;&#123;responseBody.name|replace:<span class="string">"."</span>,<span class="string">"_"</span>&#125;&#125;: <span class="type">NSObject</span> &#123;</div><div class="line">    <span class="keyword">let</span> body: &#123;&#123;responseBody.name&#125;&#125;</div><div class="line">    <span class="keyword">init</span>(body: &#123;&#123;responseBody.name&#125;&#125;) &#123; <span class="keyword">self</span>.body = body &#125;</div><div class="line">    &#123;٪<span class="keyword">for</span> variable <span class="keyword">in</span> responseBody.variables%&#125;</div><div class="line">    <span class="comment">// variables</span></div><div class="line">    &#123;٪endfor%&#125;</div><div class="line">&#123;٪endfor%&#125;</div></pre></td></tr></table></figure>
+<p>Stencil 提供了一些内置的 filter，所以我们能够很简单地将一些嵌套类型的名称 <code>A.B.C</code> 转变成 <code>A_B_C</code>。Variable 部分需要比较注意的是，像 <code>Int?</code> 这种东西  Objective C 也是看不懂的，需要额外处理成 <code>NSNumber</code>，当 variable 是 <code>ResponseBodyType</code> 或 <code>[ResponseBodyType]</code> 或 <code>ResponseBodyType?</code> 之类的也需要额外处理，挺啰嗦的，这里就不一一写明了。Sourcery 中 <code>Variable</code> 有两个参数 <code>type</code> 和 <code>typeName</code>，说实话很诡异，必须得好好看文档才知道什么时候该用什么。</p>
+<p>对 <code>ResponseBodyType?</code> 这种情况目前还没有很好的解决方法， <code>typeName.unwrappedTypeName</code> 返回的是 <code>String</code> 而不是 <code>TypeName</code>，正巧我把这些类型都嵌套在 <code>API</code> 里，可以判断其 <code>actualTypeName</code> 的前缀来捕获这种情况。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&#123;٪<span class="keyword">if</span> variable.typeName.isOptional and variable.typeName.actualTypeName|hasPrefix:<span class="string">"API."</span> %&#125;</div><div class="line"><span class="meta">@objc</span> <span class="keyword">var</span> &#123;&#123;variable.name&#125;&#125;: &#123;&#123;variable.typeName.actualTypeName.name|replace:<span class="string">"."</span>,<span class="string">"_"</span>&#125;&#125; &#123;</div><div class="line">    <span class="keyword">if</span> <span class="keyword">let</span> v = body.&#123;&#123;variable.name&#125;&#125; &#123;</div><div class="line">        <span class="keyword">return</span> &#123;&#123;variable.type.name|replace:<span class="string">"."</span>,<span class="string">"_"</span>&#125;&#125;(body: v)</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">&#125;</div><div class="line">&#123;٪endif%&#125;</div></pre></td></tr></table></figure>
+<h3 id="请求方法"><a href="#请求方法" class="headerlink" title="请求方法"></a>请求方法</h3><p>提供 Objective C 版本的请求方法很简单，就是内部调用 Swift 版本的方法。这部分需要注意的只有一些 optional 的参数类型可能要用别的类型替换，就一笔带过了。</p>
+<p>有了上一个小节的经验，我们可以发现这些模板的写法都大同小异。对方法签名的参数生成和请求参数的生成，无非都是遍历 <code>RequestBody</code> 的 <code>variables</code> 而已。唯一值得一提的是，我们可以用 <code>{٪if var.variables.count == 0%}</code> 来判断一个数组是否为空，还可以通过 <code>{٪if forloop.last%}</code> 来判断是否是当前循环的最后一次。很多用法其实都没有写在 Sourcery 的文档里面，不妨也去看看 Stencil 的文档。</p>
+<h3 id="Coding-Keys"><a href="#Coding-Keys" class="headerlink" title="Coding Keys"></a>Coding Keys</h3><p>有时候我们希望不用去刻意地让属性的名称和 JSON 里的 key 完全对应上，因为有的 key 的命名真的是难以理解，这时我们也可以利用 Sourcery 帮助我们自动生成相关的代码。</p>
+<p><a href="https://intii.com/2017/codable-enum-with-associated-values/%60">和我之前的文章一样</a>，我们用 <code>AutoCodable</code> 来指定这些需要生成代码的类型，但幸运的是，我们没有必要和 Enum with Associated Value 做斗争了。</p>
+<p>仔细观察了一下，我大概有这么几个需求：</p>
+<ol>
+<li>类型为数组时，默认值为 <code>[]</code></li>
+<li>可以指定默认值 <code>defaultValue = 0</code></li>
+<li>可以指定 key <code>jsonKey = &quot;abc&quot;</code></li>
+<li>某一些情况将 <code>Int</code> 转为 <code>Bool</code></li>
+</ol>
+<p>对于数组默认值，我们只需要把对应情况的 <code>decode</code> 改成 <code>decodeIfPresent ?? []</code> 就好了。</p>
+<p>后三者则用到了 Sourcery 中的 annotation 功能，通过注释给 Sourcery 传递代码以外的信息。</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// sourcery: jsonKey = "id"</span></div><div class="line"><span class="comment">// sourcery: defaultValue = 0</span></div><div class="line"><span class="keyword">let</span> productId: <span class="type">Int</span></div><div class="line"><span class="comment">// sourcery: boolFromInt</span></div><div class="line"><span class="keyword">let</span> worthBuying: <span class="type">Bool</span></div></pre></td></tr></table></figure>
+<p>模板中可以通过 <code>annotated</code> 这个 filter 来判断目标是否有相应的注释。也可以通过 <code>something.annotation.jsonKey</code> 这种方式来获取注释的值。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>元编程的一个好处就是没有复杂的设计，这使得扩展变得很容易。比如说，我们可以给 endpoint 增加一个获取 mock response 的功能。我们通过判断 endpoint 是否实现某一个 protocol 来决定是否插入代码。</p>
+<p>对于这个扩展，endpoint 需要实现 <code>APIEndPointHasFakeResponse</code> 这个 protocol：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">APIEndPointHasFakeResponse</span> </span>&#123;</div><div class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">handleRequestWithMockResponse</span><span class="params">(<span class="number">_</span> param: [String: Any]?, completionHandler: <span class="params">(Result&lt;Data&gt;)</span></span></span>-&gt;<span class="type">Void</span>) -&gt; <span class="type">Bool</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个方法中，我们既可以直接返回一段 JSON，也可以将请求转发给 mock server 来获取一段 mock response。当然我们也可以只对特定的请求做处理，并在这种情况下返回 <code>false</code>。</p>
+<p>我们完全不用担心这些多余的扩展会污染我们的代码，毕竟这些代码只有在实现了协议的情况下才会插入到请求方法当中；我们也可以在 extension 中实现这个协议，以保持 endpoint 定义的纯洁性，当我们不需要 mock response 了，只需要随手删掉相关代码就可以了。</p>
+<p>我们也可以只移除 protocol 而保留方法的实现，以方便下一次使用。</p>
+<p>我们可以把这一部分写成一个 macro：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&#123;٪macro extensionFakeResponse type requestBody%&#125;</div><div class="line">&#123;٪<span class="keyword">if</span> type.implements.<span class="type">APIEndPointHasFakeResponse</span>%&#125;</div><div class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></div><div class="line">        <span class="keyword">if</span> &#123;&#123;type.name&#125;&#125;.handleRequestWithMockResponse(&#123;٪call paramOrNil requestBody-%&#125;, completionHandler: &#123; </div><div class="line">            <span class="keyword">switch</span> $<span class="number">0</span> &#123;</div><div class="line">            <span class="keyword">case</span> <span class="keyword">let</span> .success(json):</div><div class="line">                <span class="keyword">let</span> result = <span class="keyword">try</span>! <span class="type">JSONDecoder</span>().decode(<span class="type">APIResponse</span>&lt;&#123;&#123;type.name&#125;&#125;.<span class="type">ResponseBody</span>&gt;.<span class="keyword">self</span>, from: json!)</div><div class="line">                completion(.success(result.body))</div><div class="line">            <span class="keyword">case</span> <span class="keyword">let</span> .failure(error): completion(.failure(error))</div><div class="line">            &#125;</div><div class="line">        &#125;) &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</div><div class="line">#endif</div><div class="line">&#123;٪endif%&#125;</div><div class="line">&#123;٪endmacro%&#125;</div></pre></td></tr></table></figure>
+<p>这样就能尽可能使请求方法模板看起来更干净一些。尽管生成的代码是挺丑的，不过谁要去管它们呢。</p>
+<p>很遗憾 Sourcery 好像还并不支持 <code>indent</code> 这个 filter，所以当缩进有点深的时候，模板会变得很难看（尽管官方好像说是支持的）。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我不太喜欢现在公司项目中 API Client 的实现方式，虽然并没有什么问题，但我还是忍不住要重构一下。原本的实现是这样的：&lt;/p&gt;
+&lt;figure class=&quot;highlight objc&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;SomeModel&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;+ (&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;)doSomething:(&lt;span class=&quot;built_in&quot;&gt;NSString&lt;/span&gt; *)aParam completion:(&lt;span class=&quot;keyword&quot;&gt;void&lt;/span&gt;(^)(&lt;span class=&quot;built_in&quot;&gt;BOOL&lt;/span&gt; isSuccess, &lt;span class=&quot;built_in&quot;&gt;NSString&lt;/span&gt; *errorMessage, SomeModel * someModel))completion &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    [APIClient.sharedClient &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        POST:someEndpoint&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        parameters: @&amp;#123; &lt;span class=&quot;string&quot;&gt;@&quot;p&quot;&lt;/span&gt;: aParam &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        success:^(&lt;span class=&quot;built_in&quot;&gt;NSURLSessionDataTask&lt;/span&gt; * _Nonnull task, &lt;span class=&quot;keyword&quot;&gt;id&lt;/span&gt;  _Nullable responseObject) &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            PPApiResponseObject *responseItem = [PPApiResponseObject createFrom:responseObject];&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; (responseItem.isSuccess) &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;// do something&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &amp;#125; &lt;span class=&quot;keyword&quot;&gt;else&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;                &lt;span class=&quot;comment&quot;&gt;// do something&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        failure:^(&lt;span class=&quot;built_in&quot;&gt;NSURLSessionDataTask&lt;/span&gt; * _Nullable task, &lt;span class=&quot;built_in&quot;&gt;NSError&lt;/span&gt; * _Nonnull error) &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;            &lt;span class=&quot;comment&quot;&gt;// do something&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;@end&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;这里有几个地方是我不喜欢的：1. 用 Objective C 写的；2. API 不太现代；3. endpoint 分散在了不同的 model 定义里面；4. 重复的东西太多。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Objective C" scheme="http://intii.com/tags/Objective-C/"/>
+    
+      <category term="Sourcery" scheme="http://intii.com/tags/Sourcery/"/>
+    
+      <category term="Meta Programming" scheme="http://intii.com/tags/Meta-Programming/"/>
+    
+      <category term="元编程" scheme="http://intii.com/tags/%E5%85%83%E7%BC%96%E7%A8%8B/"/>
+    
+      <category term="重构" scheme="http://intii.com/tags/%E9%87%8D%E6%9E%84/"/>
+    
+  </entry>
+  
+  <entry>
     <title>接手别人的项目</title>
     <link href="http://intii.com/2018/refactoring-others-project-001/"/>
     <id>http://intii.com/2018/refactoring-others-project-001/</id>
     <published>2018-06-09T03:21:00.000Z</published>
-    <updated>2018-06-12T15:23:46.166Z</updated>
+    <updated>2018-06-29T14:55:00.583Z</updated>
     
     <content type="html"><![CDATA[<p>在城大的工作终于是结束了。用了「终于」两个字，是因为我再也不能承受这份工作了，虽然他们允许我远程工作，在工作中我的时间安排相当自由，做的内容也是比较自由，但是正因为太自由了，我发现我在里面投入了过多的时间与精力——描述太过「简单」的需求让我很难界定范围。而教授又希望他的 app 能够「充满不同游戏」，这个状态一直都在持续。</p>
 <p>于是我找了一份朝九晚六周末休息、离家还算近的工作。一切都还挺好的，只是接手代码这件事让我有些难受。</p>
@@ -644,98 +725,6 @@
     </summary>
     
       <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>北海道之行</title>
-    <link href="http://intii.com/2014/a-trip-to-hokkaido/"/>
-    <id>http://intii.com/2014/a-trip-to-hokkaido/</id>
-    <published>2014-02-10T17:26:55.000Z</published>
-    <updated>2016-12-25T09:39:28.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>第一次去霓虹国旅游是中考结束之后的那个暑假，大概是去了东京呀富士山呀那一带，除了台场的 1:1 高达 RX78 和富士极乐园的鬼屋还有紧凑而舒适的旅馆就没什么别的印象了。今年因为实在无聊，就决定跟母上去一趟旅游，再因为长这么大还没看过雪，就决定再去一次日本，这次去北海道！</p>
-<p>我们从宝安机场的新航站楼直飞札幌的新千岁机场，最后从带广小机场飞回寨都，实施一种先购物再逛景点的作死行程。</p>
-<a id="more"></a>
-<p><img src="http://o7kolop30.bkt.clouddn.com/Artboard-1-1.png" alt=""></p>
-<p>因为是第一次去下雪的地方，所以得做许多准备，该穿什么衣服网上基本上随便就能搜到，据经验者所言，因为北海道室内外温差相当大（室内大概有二十几度的样子），所以应该采用<a href="http://www.baike.com/wiki/洋葱式穿衣法">洋葱式穿法</a>，进屋就脱。但到达北海道时才发现也没有他们说的那么夸张，五天来我都是三件衣服两条裤子，偶尔戴戴围巾帽子。网上很多人建议穿雪裤，怕的是湿了难干，但实际上我这几天都在穿牛仔裤，表示从来没有弄湿过，其实在进入室内以前把雪拍掉就好了。墨镜如果不滑雪实在没有必要。</p>
-<p>网上还有说在寒冷天气下电池更耗电的事情，五天我相机总共用了四颗电池，没有充过电，其中还有一颗是因为网上有人建议保持相机关机更省电然后忘记关机而用完的。所以如果你不是按快门狂魔，准备两颗电池每天充大概也足够了。倒是手机耗电异常快。</p>
-<p>北海道这种乡下地方的酒店只有大堂有 wifi，如果想在北海道期间还能安逸的上网的话可以买当地的 Sim 卡，我买的是今年才出现的 DarumaSim 达摩卡，比较便宜但速度很慢（枉我还推荐给别人 <del> 来当我的小白鼠 </del> 了呢）。只能用来上网。另外还有 b-mobile 可以选择。</p>
-<h1 id="Day-1"><a href="#Day-1" class="headerlink" title="Day 1"></a>Day 1</h1><p>早上的班机所以一大早就得起来了<em>(:3 」∠)</em>迷迷糊糊的穿好衣服拿好行李却忘了带耳机，到了宝安机场 T3 航站楼想看看有没有耳机卖，但都是入耳和头戴的啊（可以在中信书店买到哦），我的耳朵戴不进去，于是只好凑合用送我们来的姨丈的借我耳机（还是入耳的（而且是三爽的（而且线控完全不能用）））……</p>
-<p>见到导游后导游还给我了一个红包（</p>
-<p>整个团大概有七家人的样子，其中两家人数过十，没有什么可爱的萝莉正太，隔壁团倒是有个很口耐的。</p>
-<p>飞了大概 5 个小时，总算到了新千岁机场，那时差不多五点，北海道的天空已经暗下来了，所以当我们到达第一个景点大通公园已经是晚上了，而且冰雕节将近开幕根本就进不去……最后嘛都看不到。瞎逛了几十分钟去吃了一顿烤肉然后就没然后了，第一天就被旅行社混过去了。</p>
-<p>然后我发现达摩卡在 iPhone 5s 上无法开 Personal Hotspot，邮件询问后他们也承认了。</p>
-<p>第一天气候温和没有下雪，温度大概在零度的样子。</p>
-<p>[caption id=”” align=”alignnone” width=”957”]<img src="https://lh3.googleusercontent.com/-risW0vhUnHs/Uviu1LamhGI/AAAAAAAAArU/-4v6Zdc05sY/w957-h538-no/DSCF0050+%25281%2529.jpg" alt=""> 没东西看的大通公园[/caption]</p>
-<h1 id="Day-2"><a href="#Day-2" class="headerlink" title="Day 2"></a>Day 2</h1><p>由于昨天晚上实在没时间了，将到狸小路买东西的行程调到了第二天一早，买了些白色恋人，还有的人买了电饭煲和马桶座，没什么感觉的一个地方，一大早就没几家店开了门。</p>
-<p>中午去了旭川拉面村吃拉面，那里的拉面非常咸，非常非常咸，而且拉面村怎么只有四家店呀，这也能叫村呀。</p>
-<p>然后去了旭川动物园看企鹅游行，这才几只企鹅啊，这也能叫游行啊……</p>
-<div class="gallery3">  <img src="http://farm3.staticflickr.com/2853/12433457725_b711be4b97_b.jpg" alt=""> <img src="http://farm4.staticflickr.com/3701/12435590954_acca825b5b_b.jpg" alt=""> <img src="https://lh6.googleusercontent.com/-BC7MmyFbY-E/UyQI5Jj2VRI/AAAAAAAAAvE/nqZAnxupK4E/w815-h543-no/DSCF0121.jpg" alt=""></div>
-
-<p>晚上又去什么层云峡冰瀑祭，这特么也能叫冰雕啊……</p>
-<p>总之第二天又是怀着一股怨念住进了酒店。这天睡的是榻榻米。</p>
-<p>[caption id=”” align=”alignnone” width=”819”]<img src="https://lh3.googleusercontent.com/-JTHqrzOoPaQ/Uvjk9VfzdlI/AAAAAAAAAr8/kK40kbHymrE/w819-h546-no/DSCF0129.jpg" alt=""> 挺干净的<em>(:3 」∠)</em>[/caption]</p>
-<p>这个酒店有温泉哦，24 小时开放哦，但咱这种见到上半身裸着的人都受不了的人最后还是没去，不过其实过了 24 点基本就没人去泡了。总有人说我好浪费……我觉得旅游自己开心就好，没必要因为团里包了这个就强迫自己去做嘛。（今天这个温泉据线报所言相当小）</p>
-<h1 id="Day-3"><a href="#Day-3" class="headerlink" title="Day 3"></a>Day 3</h1><p>第三天的活动看起来好很多，这是我第二天看行程表时的想法，但是早上去看的瀑布和监狱博物馆都一般般，瀑布都结冰了看上去就白花花一片，网走鉴于博物馆嘛，也不是我想象中的那种东西……</p>
-<div class="gallery2"><img src="https://lh5.googleusercontent.com/-pfx6rQ9_FVo/UyQJPHPd2VI/AAAAAAAAAvU/epArANewSZI/w815-h543-no/DSCF0134.jpg" alt=""> <img src="http://farm4.staticflickr.com/3692/12435593094_9e1a402c45_b.jpg" alt=""></div>
-
-<div class="dark"><br><br>我一开始还以为是参观监狱呢……其实只是保留了建筑而已，还莫名其妙的弄了一堆人的模型摆在那里充囚犯，嘛这博物馆怎么看怎么随便，一点也没有监狱的样子。<br><br></div>
-
-<p>中午去吃火锅之类的的东西，我们和另一家人一起弄了一只皇帝蟹来吃，腿生吃，好恶心，母上却说好好吃。</p>
-<p><img src="https://lh4.googleusercontent.com/-G5i6UQFayDM/Uvjm8J4rPPI/AAAAAAAAAsQ/yP0rxyXyw60/w958-h470-no/DSCF0150.jpg" alt=""></p>
-<p>下午的活动非常赞，是破冰船噢www，虽然当天没有冰，但是甲板上可是有好多飞得好近的海鸥呢，这使得只带了一台 35mm 定焦相机的我也能打打鸟了233。</p>
-<div class="gallery3"><img src="http://farm8.staticflickr.com/7421/12437065314_cd9db9d124_b.jpg" alt=""> <img src="http://farm3.staticflickr.com/2884/12437063494_b4659cd917_b.jpg" alt=""> <img src="http://farm4.staticflickr.com/3761/12437064114_c83fdf6cfa_b.jpg" alt=""></div>
-
-<div class="dark"><br><br>毕竟是没拍过鸟，由于快门选得太慢了好多都糊了。因为带着手套各种不方便和懒，对于在天上飞的鸟我用超焦距来省下了每次对焦的步骤，停在船上的则用自动对焦解决……经过这次才发现独立光路 OVF 是那么的有用呀，在鸟类进入镜头之前就能看到它们并判断它们什么时候会进入镜头范围。<br><br>这些海鸥不怎么怕人，一停下来就能停好久。<br><br></div>
-
-<p>于是我就一直呆在甲板上了，完全忘了这是破冰船，下船后才知道这次海上根本没有冰，团员们也因此相当愤怒，确实本身形成里就注明若因天气原因无法乘坐破冰船就改成参观流冰馆，在这种海上没有冰的天气导游就应该随机应变嘛。</p>
-<p>晚上我们到达了新阿寒酒店，这是这次旅行之中最好的酒店了，但还是只有大堂有 wifi，如果想在房间里（或者外头）也能用上网络，那可以 500JPY/day 租一台 mifi，我们租了一台，速度相当不错，不用跨栏就能看B站。晚饭也是吃酒店里的自助餐，餐厅可以望见阿寒湖，晚上阿寒湖上会放烟花wwwwww</p>
-<p>这家酒店的温泉在顶楼，但似乎晚上露天温泉不开。</p>
-<h1 id="Day-4"><a href="#Day-4" class="headerlink" title="Day 4"></a>Day 4</h1><p>早上在结了冰的阿寒湖上走了走之后便去了附近的阿衣努族民族村，发现日本人真的什么都能叫「村」呢，明明这么小……房子可能还有点历史，但都变成卖纪念品的小店了。</p>
-<div class="gallery2"><img src="http://farm8.staticflickr.com/7356/12437064084_60cc9c3a63_b.jpg" alt=""> <img src="http://farm6.staticflickr.com/5529/12437064064_fe32b571e7_b.jpg" alt=""></div>
-
-<p>然后因为一边看天一边走摔了一跤，幸好衣服厚没什么感觉。</p>
-<p>这里必须说一下呢有积雪的地方比较好走，尽量不要走到冰上呢，相当滑，有时会看到路上有好多黑色的小石子，那是人为撒上去防滑的，但没什么用。如果想要昂首挺胸大步向前，可以到便利店里买套在鞋子上的防滑垫（套？）哦。</p>
-<p>可能就一圈跑道的大小，转眼就绕了一圈，一大早店都没开门，属于一个没什么意义的景点呢。</p>
-<p>接着我们就出发去全程最佳景点屈斜路湖了。好怪的名字呀。</p>
-<p>据介绍因为屈斜路湖有地热，湖水比较暖，所以没有结冰，所以有鹅会飞到这边来，所以会非常漂亮，但是呀，岸上也太特么的冷了，冻的我直发抖，但真的漂亮，看着真的会有一种心旷神怡，宠辱偕忘的感觉。</p>
-<div class="gallery3"><img src="http://farm8.staticflickr.com/7349/12438672823_d2a550dd15_b.jpg" alt=""><img src="http://farm6.staticflickr.com/5487/12438671393_cb79706037_b.jpg" alt=""><img src="http://farm8.staticflickr.com/7459/12438672143_c54ddec6ff_b.jpg" alt=""></div>
-
-<p>除了屈斜路湖，剩余的美景基本上都集中在了路上，只能隔着窗看看了（轮自由行的好处）。</p>
-<p>中午去了一家似乎是司机先生推荐的店吃饭，咱要了一份炸猪排定食，分量充足味道鲜美，店主还好心地给我们提供了免费的饮料。不得不说北海道人真的又热情又有礼貌(つдC)，霓虹语听起来也非常润耳，在表现礼貌将音调抬高的同时完全没有台腔那种刺耳感。</p>
-<p>啊对了早上还去了摩周湖来着差点忘了，因为只能站在瞭望台上看所以印象不是很深刻呢，完全比不上屈斜路湖。</p>
-<p>之后去看鹤看湿原完全无感，总有种旅行社在凑景点的感觉。晚上买了一瓶咖啡牛奶看着芦田爱菜的电视剧度过了在北海道的最后一个晚上。</p>
-<h1 id="Day-5"><a href="#Day-5" class="headerlink" title="Day 5"></a>Day 5</h1><p>一般来说出来旅游我都会找一天一大早起来出去四处走走，但北海道室内温度实在太适合睡觉，所以总是起不来，最后一天也不例外……最后一天是逛商场呢。</p>
-<p>因为逛商场实在无聊，所以我就利用这两个半小时到外面走了走。北海道这种乡下地方没什么人非常安静，个人也很喜欢挂在杆子上的电线233。</p>
-<div class="full-width-image"><img src="https://lh4.googleusercontent.com/-PoUKkoWp_vA/UvjnFfOg13I/AAAAAAAAAsY/SZ9SuGtOimI/s2560/DSCF0352.jpg" alt=""></div>
-
-<p>这家商场里面基本没电器卖，但旁边有一家叫 100 什么的卖的基本上都是电器，我上去看了看没发现柜台里有 WCL-X100，又懒得问，所以就算了。这里虽然也有电饭煲卖，但都不是 220V 的。</p>
-<p>中午吃完牛肉之后，便去了行程里最后一个景点：幸福车站。</p>
-<div class="gallery3"><img src="http://farm4.staticflickr.com/3815/12438673353_c74b820175_b.jpg" alt=""> <img src="http://farm6.staticflickr.com/5540/12438675033_c17d341631_b.jpg" alt=""> <img src="http://farm4.staticflickr.com/3669/12438675933_90a7a77887_b.jpg" alt=""></div>
-
-<div class="dark"><br><br>与预期不太一样呢……车厢似乎可以上去（反正我上去了），周围的景色也不错<br><br></div>
-
-<p>离开幸福车站之后，我们就开始为了好的座位而向带广机场飞奔了。</p>
-<p>带广机场是一个相当小的的机场，里头只有两家卖零食的免税店、一台 X 光机和两个登机口，于是 500+ 个人在这个机场里挤死了。</p>
-<p>但这小机场还是很有趣的，在登机之前他们还会发牛奶哦，有冷有热任君选择。</p>
-<p>东九区六点起飞大概六个小时，我们终于回到了寨都。新航站楼的效率和带广小机场差不多，出行李花了差不多一个小时。</p>
-<p>当天，大通公园的冰雕节已经开幕了，我总觉得，这行程应该反过来才对吧……</p>
-<div class="dark"><br><br>总的来说这次旅游还是不错的，我也算是一个见过雪的人类了(·̀ᴗ·́)و ̑̑<br><br>把 3DS 和 Kindle 带过去基本都没用上，iPhone 里存的一堆 Podcast 也基本没听<br><br>旅游是好，但我下次才不要参加什么 500 人的包机团呢，每天抢电梯都快挂了，上了飞机大家都没熄火吵得简直像是菜市场一样……<br><br>还有南航的飞机真渣渣（我要坐皮卡丘飞机！！）<br><br></div>
-
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;第一次去霓虹国旅游是中考结束之后的那个暑假，大概是去了东京呀富士山呀那一带，除了台场的 1:1 高达 RX78 和富士极乐园的鬼屋还有紧凑而舒适的旅馆就没什么别的印象了。今年因为实在无聊，就决定跟母上去一趟旅游，再因为长这么大还没看过雪，就决定再去一次日本，这次去北海道！&lt;/p&gt;
-&lt;p&gt;我们从宝安机场的新航站楼直飞札幌的新千岁机场，最后从带广小机场飞回寨都，实施一种先购物再逛景点的作死行程。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
-    
-      <category term="Featured" scheme="http://intii.com/categories/Essay/Featured/"/>
     
     
   </entry>
