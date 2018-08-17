@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2018-06-29T16:26:40.696Z</updated>
+  <updated>2018-08-16T15:39:45.846Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -14,6 +14,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>写一个 Mock API Server 让生活更简单</title>
+    <link href="http://intii.com/2018/make-life-easier-with-mock-api-server/"/>
+    <id>http://intii.com/2018/make-life-easier-with-mock-api-server/</id>
+    <published>2018-08-18T03:21:00.000Z</published>
+    <updated>2018-08-16T15:39:45.846Z</updated>
+    
+    <content type="html"><![CDATA[<p>公司项目的业务逻辑蛮复杂的，有时候我们需要测试 UI，就得让订单达到某一个特定的状态，往往需要在后台里先点个几分钟。其实最后我们还不是拿的后端返回的数据来填充 UI，所以为什么不直接把这个状态的数据构造好，直接拿来使用呢？所以我还是决定写个 Mock Server。</p>
+<p>Mock Server 的功能很简单：</p>
+<ol>
+<li>根据 API Endpoint，返回配置文件中指定的 JSON 文件；</li>
+<li>可以局部匹配参数，返回指定的 JSON 文件。</li>
+</ol>
+<p>后来 Android 端的小伙伴似乎也有点兴趣，但不想总是改代码指向 Mock Server，那行，我们就再加一个功能：<strong>3. 配置文件中没有指定的接口的请求，转发到开发服务器中。</strong></p>
+<p>前两部分很简单，就是写一个 API Server 而已。因为懒得碰其它语言，直接使用了 Swift + Vapor。每次收到请求，我们都读取一下配置文件，大概是这么个结构：</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Pref</span>: <span class="title">Decodable</span> </span>&#123;</div><div class="line">	<span class="keyword">let</span> endpoints: [<span class="type">Endpoint</span>]</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Endpoint</span>: <span class="title">Decodable</span> </span>&#123;</div><div class="line">	<span class="keyword">let</span> endpoint: <span class="type">String</span></div><div class="line">	<span class="keyword">let</span> filename: <span class="type">String</span>?</div><div class="line">	</div><div class="line">	<span class="keyword">let</span> dispatch: [<span class="type">Dispatcher</span>]?</div><div class="line">	</div><div class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">Dispatcher</span>: <span class="title">Decodable</span> </span>&#123;</div><div class="line">		<span class="keyword">let</span> parameters: <span class="type">JSONValue</span></div><div class="line">		<span class="keyword">let</span> filename: <span class="type">String</span></div><div class="line">		</div><div class="line">		<span class="function"><span class="keyword">func</span> <span class="title">match</span><span class="params">(<span class="number">_</span> param: JSONValue)</span></span> -&gt; <span class="type">Bool</span> &#123;</div><div class="line">			<span class="keyword">return</span> parameters.compare(param)</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>获得请求后，我们首先判断接口是否在 <code>Pref.endpoints</code> 中，如果有，则在看其参数是否存在一个子集处于 <code>Endpoint.dispatch</code> 中，如果有则使用其中的 <code>filename</code>.json，没有则 Fallback 到 <code>Endpoint.filename</code>.json。</p>
+<p>对于其它的一切情况，返回 404。</p>
+<p>第三点就比较麻烦了，一开始我想在 Mock Server 里再发一次请求，尽管咨询了后端的同学，但最终还是遇到了一些我暂时解决不了的问题：</p>
+<ol>
+<li>多个请求同时来的时候会收不到一些响应；</li>
+<li>用 Nginx 实现 HTTPS 的时候，响应会变成双倍。但 Vapor 3 直接实现 HTTPS，找遍了 Google 都没找到方法。</li>
+</ol>
+<p>我倒腾了很久都没搞懂是什么情况……最后 Google 发现 Nginx 有一个东西叫做 <code>proxy_next_upstream</code>，我们可以指定多个 Upstream，如果一个有问题，就用下一个。所以我们可以写下这样的 Upstream：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">upstream w &#123;</div><div class="line">	server localhost:4343 max_fails=0 weight=200;</div><div class="line">	server real.dev.api.server.com:443 max_fails=0 weight=1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>值得注意的是要写下权重，避免 Nginx 轮询调用。</p>
+<p>然后再写两个 Server：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">server &#123; #A</div><div class="line">	listen       80;</div><div class="line">	listen       443 ssl;</div><div class="line">	server_name  real.dev.api.server.com;</div><div class="line"></div><div class="line">	ssl_certificate servernew.crt;</div><div class="line">	ssl_certificate_key server.key;</div><div class="line"></div><div class="line">	ssl_session_cache    shared:SSL:1m;</div><div class="line">	ssl_session_timeout  5m;</div><div class="line"></div><div class="line">	location / &#123;</div><div class="line">		proxy_pass https://w;</div><div class="line">		proxy_set_header Host       real.dev.api.server.com;</div><div class="line">		proxy_next_upstream error timeout http_500 http_502 http_503 http_504 http_404 invalid_header non_idempotent;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">server &#123; #B</div><div class="line">	listen       4343 ssl;</div><div class="line">	server_name  localhost;</div><div class="line"></div><div class="line">	ssl_certificate servernew.crt;</div><div class="line">	ssl_certificate_key server.key;</div><div class="line"></div><div class="line">	location / &#123;</div><div class="line">		proxy_pass http://localhost:9090;</div><div class="line">		proxy_set_header Host       real.dev.api.server.com;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如此一来，通过改 Host 或改代码指向本机 IP 的方式，我们就能通过 Server#A 先调用 Mock Server，如果配置文件中没有请求的接口，则返回 404，接着调用真实的开发环境接口。</p>
+<p>Server#B 是因为 Server#A 的 <code>proxy_pass</code> 用的是 <code>https</code>，试了一下有问题，所以又做了一层。我并不清楚以上哪一行是多余的，反正能用（</p>
+<p>现在我们就能无痛使用 Mock Server 获得假数据了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;公司项目的业务逻辑蛮复杂的，有时候我们需要测试 UI，就得让订单达到某一个特定的状态，往往需要在后台里先点个几分钟。其实最后我们还不是拿的后端返回的数据来填充 UI，所以为什么不直接把这个状态的数据构造好，直接拿来使用呢？所以我还是决定写个 Mock Server。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Vapor" scheme="http://intii.com/tags/Vapor/"/>
+    
+      <category term="Nginx" scheme="http://intii.com/tags/Nginx/"/>
+    
+      <category term="API Server" scheme="http://intii.com/tags/API-Server/"/>
+    
+  </entry>
   
   <entry>
     <title>通过 Sourcery 来写 API Client</title>
@@ -688,44 +740,6 @@
     
     
       <category term="App" scheme="http://intii.com/tags/App/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>最近买了副降噪耳机</title>
-    <link href="http://intii.com/2014/bought-a-pair-of-sony-nc100d-recently/"/>
-    <id>http://intii.com/2014/bought-a-pair-of-sony-nc100d-recently/</id>
-    <published>2014-03-19T13:58:57.000Z</published>
-    <updated>2016-07-14T15:45:48.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>自从下载了 <a href="http://castro.fm">Castro</a> 这款优秀的 Podcast app，我便开始了每天听着 Podcast 上课的校园生活。</p>
-<p>从前我一直没有太在意耳机，要是外头太吵，我不听就罢了，但是我渐渐发现这个星球上想找个不吵的地方太难了，再经过上次坐飞机的惨痛经历，我开始考虑买一只降噪耳机。尤其作为一个每周都要回家<del>一分钟都不想呆在学校，</del>甚至想着要是大三课少就把宿舍退掉而经常需要花好几十分钟晃十几个站回家的学生，拥有一副降噪耳机实在是一件再好不过的事情了。</p>
-<a id="more"></a>
-<p>我对降噪耳机的要求也不高</p>
-<ol>
-<li>价格不贵</li>
-<li>样子能看</li>
-<li>能戴上</li>
-<li>有效果，但保留一定的外界的声音</li>
-</ol>
-<p>我发现我真是太机智了，第一点和第四点简直就是一个意思嘛，于是我完全没考虑 BOSE 家的那几款，在亚马逊和京东还有 Google 上经过一番搜索之后发现不是相当贵、评价又还凑合、样子还可以、效果又不算太好的就只有 <a href="http://www.amazon.cn/SONY-索尼-MDR-NC100D-MCN-黑色-降噪耳机/dp/B008TN5V7M/ref=sr_1_1?ie=UTF8&amp;qid=1395237325&amp;sr=8-1&amp;keywords=nc100d">Sony NC100D</a> 了。这是一副入耳式主动降噪耳机，吃七号电池，没电时也能够当做普通耳机使用。唯一担心的就是戴不稳。</p>
-<p>以前我也买过一副入耳式耳机，但一直戴不稳，幸好 NC100D 的耳塞设计比较类似于于 Apple 的 Earpods，能抵住耳朵的<a href="https://www.google.com/search?q=对耳屏&amp;newwindow=1&amp;sa=X&amp;biw=1280&amp;bih=633&amp;tbm=isch&amp;tbo=u&amp;source=univ&amp;ei=IqIpU6LYNZL1oATKxoDgCQ&amp;ved=0CEoQsAQ">对耳屏</a>防止耳塞被挤出来，所以戴起来还是挺稳的。戴入后异物感不大，听诊器效应也不大。而且戴久了之后，我的脑洞被撑大了，耳机也不再掉出来了。</p>
-<p>音质怎样呢？作为一个木耳，我不知道。但是降噪效果是十分明显的。开启降噪之后，走在大街上除非车从你面前呼啸而过，否则只能听见很轻的引擎声。在地铁上也能去掉大概 50%+ 的轰鸣声，对于听播客来说是足够了，音量开到四格就能听了。降噪耳机们对人声都没有很好的效果，据我常年混肯德基的经验，开启降噪后依然能听到响亮的人声（被耳塞阻挡了不少），但是听起来很模糊，也算是能起到些作用吧。</p>
-<p>电池我用的是 Eneloop 的<a href="http://www.amazon.cn/SANYO-三洋-爱乐普eneloop-7号高容量充电电池黑色XX系列4节装-950毫安-HR-4UWXB-4TC/dp/B00AGB3LX6/ref=sr_1_1?ie=UTF8&amp;qid=1395237457&amp;sr=8-1&amp;keywords=eneloop+7">黑不溜秋的 7 号电池</a>，一周大概换一次电池就够了。</p>
-<p>开启降噪后耳机会发出一些沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙沙的声音，嘛当做雨声就好（</p>
-<p>唯一让我不解的是插到 Mac 上关掉降噪都会有沙沙声，很烦呢这点。没线控这点也是……现在我都是通过拔耳机来暂停的了……</p>
-<p>如果没有什么大降价的话，这耳机估计能列在「我今年买到最值的东西」里面，虽然效果肯定完全比不上 BOSE 家的降噪耳机，但考虑到价格差和效果，还是一款很值得考虑的产品。为了自己耳朵着想，也为了能利用上地铁里的一些时间听听播客、玩玩太鼓达人，买一对降噪耳机才不是什么坏事呢(￣▽￣)</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;自从下载了 &lt;a href=&quot;http://castro.fm&quot;&gt;Castro&lt;/a&gt; 这款优秀的 Podcast app，我便开始了每天听着 Podcast 上课的校园生活。&lt;/p&gt;
-&lt;p&gt;从前我一直没有太在意耳机，要是外头太吵，我不听就罢了，但是我渐渐发现这个星球上想找个不吵的地方太难了，再经过上次坐飞机的惨痛经历，我开始考虑买一只降噪耳机。尤其作为一个每周都要回家&lt;del&gt;一分钟都不想呆在学校，&lt;/del&gt;甚至想着要是大三课少就把宿舍退掉而经常需要花好几十分钟晃十几个站回家的学生，拥有一副降噪耳机实在是一件再好不过的事情了。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Essay" scheme="http://intii.com/categories/Essay/"/>
-    
     
   </entry>
   
