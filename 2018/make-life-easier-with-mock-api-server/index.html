@@ -23,15 +23,15 @@
 <p>如此一来，通过改 Host 或改代码指向本机 IP 的方式，我们就能通过 Server#A 先调用 Mock Server，如果配置文件中没有请求的接口，则返回 404，接着调用真实的开发环境接口。</p>
 <p>Server#B 是因为 Server#A 的 <code>proxy_pass</code> 用的是 <code>https</code>，试了一下有问题，所以又做了一层。我并不清楚以上哪一行是多余的，反正能用（</p>
 <p>现在我们就能无痛使用 Mock Server 获得假数据了。</p>
-</div></article></div></main><footer><div class="paginator"><a href="/2018/write-api-client-with-sourcery/" class="next">Next Post →</a></div><div id="container"></div><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"><script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script><script>var gitment = new Gitment({
-  id: 'Sat Aug 18 2018 11:21:00 GMT+0800',
-  owner: 'int123c',
+</div></article></div></main><footer><div class="paginator"><a href="/2018/write-api-client-with-sourcery/" class="next">Next Post →</a></div><div id="container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+  clientID: 'efccd5f0aa425a6453e4',
+  clientSecret: 'd886480b3ac601b49591d7d457cafaeefbe546c1',
   repo: 'int123c.github.io',
-  oauth: {
-    client_id: 'efccd5f0aa425a6453e4',
-    client_secret: 'd886480b3ac601b49591d7d457cafaeefbe546c1',
-  },
+  owner: 'int123c',
+  admin: ['int123c'],
+  id: location.pathname.substring(0, 45),
+  distractionFreeMode: false 
 })
-gitment.render('container')
 
+gitalk.render('container')
 </script><div class="copyright"><p>© 2012 - 2018, handcrafted under ☁︎ in the city of knockoffs.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create',"UA-17603222-1",'auto');ga('send','pageview');</script></body></html>

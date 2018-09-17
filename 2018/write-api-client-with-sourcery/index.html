@@ -45,15 +45,15 @@
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&#123;٪macro extensionFakeResponse type requestBody%&#125;</div><div class="line">&#123;٪<span class="keyword">if</span> type.implements.<span class="type">APIEndPointHasFakeResponse</span>%&#125;</div><div class="line">#<span class="keyword">if</span> <span class="type">DEBUG</span></div><div class="line">        <span class="keyword">if</span> &#123;&#123;type.name&#125;&#125;.handleRequestWithMockResponse(&#123;٪call paramOrNil requestBody-%&#125;, completionHandler: &#123; </div><div class="line">            <span class="keyword">switch</span> $<span class="number">0</span> &#123;</div><div class="line">            <span class="keyword">case</span> <span class="keyword">let</span> .success(json):</div><div class="line">                <span class="keyword">let</span> result = <span class="keyword">try</span>! <span class="type">JSONDecoder</span>().decode(<span class="type">APIResponse</span>&lt;&#123;&#123;type.name&#125;&#125;.<span class="type">ResponseBody</span>&gt;.<span class="keyword">self</span>, from: json!)</div><div class="line">                completion(.success(result.body))</div><div class="line">            <span class="keyword">case</span> <span class="keyword">let</span> .failure(error): completion(.failure(error))</div><div class="line">            &#125;</div><div class="line">        &#125;) &#123; <span class="keyword">return</span> <span class="literal">nil</span> &#125;</div><div class="line">#endif</div><div class="line">&#123;٪endif%&#125;</div><div class="line">&#123;٪endmacro%&#125;</div></pre></td></tr></table></figure>
 <p>这样就能尽可能使请求方法模板看起来更干净一些。尽管生成的代码是挺丑的，不过谁要去管它们呢。</p>
 <p>很遗憾 Sourcery 好像还并不支持 <code>indent</code> 这个 filter，所以当缩进有点深的时候，模板会变得很难看（尽管官方好像说是支持的）。</p>
-</div></article></div></main><footer><div class="paginator"><a href="/2018/make-life-easier-with-mock-api-server/" class="prev">← Previous Post</a><a href="/2018/refactoring-others-project-001/" class="next">Next Post →</a></div><div id="container"></div><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"><script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script><script>var gitment = new Gitment({
-  id: 'Mon Jun 25 2018 11:21:00 GMT+0800',
-  owner: 'int123c',
+</div></article></div></main><footer><div class="paginator"><a href="/2018/make-life-easier-with-mock-api-server/" class="prev">← Previous Post</a><a href="/2018/refactoring-others-project-001/" class="next">Next Post →</a></div><div id="container"></div><link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"><script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script><script>var gitalk = new Gitalk({
+  clientID: 'efccd5f0aa425a6453e4',
+  clientSecret: 'd886480b3ac601b49591d7d457cafaeefbe546c1',
   repo: 'int123c.github.io',
-  oauth: {
-    client_id: 'efccd5f0aa425a6453e4',
-    client_secret: 'd886480b3ac601b49591d7d457cafaeefbe546c1',
-  },
+  owner: 'int123c',
+  admin: ['int123c'],
+  id: location.pathname.substring(0, 45),
+  distractionFreeMode: false 
 })
-gitment.render('container')
 
+gitalk.render('container')
 </script><div class="copyright"><p>© 2012 - 2018, handcrafted under ☁︎ in the city of knockoffs.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create',"UA-17603222-1",'auto');ga('send','pageview');</script></body></html>
