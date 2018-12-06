@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://intii.com/2018/write-api-client-with-sourcery/</loc>
+    
+    <lastmod>2018-11-29T14:46:55.522Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://intii.com/2018/flatmapping-optional-tuple-with-function/</loc>
     
     <lastmod>2018-11-25T14:37:26.485Z</lastmod>
@@ -89,13 +96,6 @@
     <loc>http://intii.com/2018/make-life-easier-with-mock-api-server/</loc>
     
     <lastmod>2018-08-17T14:57:34.815Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://intii.com/2018/write-api-client-with-sourcery/</loc>
-    
-    <lastmod>2018-06-29T16:26:40.696Z</lastmod>
     
   </url>
   
