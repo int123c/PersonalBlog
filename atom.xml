@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2019-05-08T15:15:50.903Z</updated>
+  <updated>2019-09-13T01:48:04.356Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -17,17 +17,50 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>用 Function Builder 来简化 Auto Layout</title>
+    <link href="http://intii.com/2019/simplify-auto-layout-constraints-with-function-builder/"/>
+    <id>http://intii.com/2019/simplify-auto-layout-constraints-with-function-builder/</id>
+    <published>2019-09-12T06:30:00.000Z</published>
+    <updated>2019-09-13T01:48:04.356Z</updated>
+    
+    <content type="html"><![CDATA[<p>尽管用代码来写 layout constraint 已经比以前要简单许多了，但是还是有一些麻烦的地方。一个简单的例子就是很多第三方布局库都会提供一些这样的写法：</p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">foo.snp.makeConstraints &#123; make <span class="keyword">in</span></span><br><span class="line">    make.center.equalTo(bar)</span><br><span class="line">    make.width.equalTo(<span class="number">12</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>如果用 layout anchor 来写的话，就需要三行了： </p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">NSLayoutConstraint</span>.activate([</span><br><span class="line">    foo.centerXAnchor.constraint(equalTo: bar.centerXAnchor),</span><br><span class="line">    foo.centerYAnchor.constraint(equalTo: bar.centerYAnchor),</span><br><span class="line">    foo.widthAnchor.constraint(equalToConstant: <span class="number">12</span>) </span><br><span class="line">])</span><br></pre></td></tr></table></figure><p>倒也不是没有办法优化，比如说我们可以给 <code>UIView</code> 增加一个方法直接返回居中相关的两个约束，但最终的写出来却还是很奇怪：</p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">NSLayoutConstraint</span>.activate(</span><br><span class="line">    [foo.widthAnchor.constraint(equalToConstant: <span class="number">12</span>)]</span><br><span class="line">    + foo.constraintsToCenter(<span class="keyword">in</span>: bar)</span><br><span class="line">)</span><br></pre></td></tr></table></figure><a id="more"></a><p>这个时候 function builder 横空出世了。它能让我们将一连串可以转化为一组 <code>NSLayoutConstraint</code> 的表达式串联写在 block 里面，最终 function builder 会将这些表达式合成为一个 <code>[NSLayoutConstraint]</code>，我们可以定义一个 protocol <code>LayoutConstraintBuildUp</code> 来代表这些表达式，它们会在 function builder 的 <code>buildBlock</code> 方法中被合并成为一个 <code>[NSLayoutConstraint]</code>。</p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">protocol</span> <span class="title">LayoutConstraintBuildUp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">buildUp</span><span class="params">()</span></span> -&gt; [<span class="type">LayoutConstraintBuildUp</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@_functionBuilder</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">LayoutConstraintBuilder</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">buildBlock</span><span class="params">(<span class="number">_</span> children: LayoutConstraintBuildUp...)</span></span> -&gt; [<span class="type">LayoutConstraintBuildUp</span>] &#123;</span><br><span class="line">        <span class="keyword">return</span> children.<span class="built_in">map</span> &#123; $<span class="number">0</span>.buildUp() &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>最终我们就可以为 <code>NSLayoutConstraint</code> 增加一个方法，让其能够接受一个 function builder 作为参数构建约束。</p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">NSLayoutConstraint</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="function"><span class="keyword">func</span> <span class="title">activate</span><span class="params">(@LayoutConstraintBuilder <span class="number">_</span> constraints: <span class="params">()</span></span></span> -&gt; [<span class="type">LayoutConstraintBuildUp</span>]) &#123;</span><br><span class="line">        <span class="keyword">let</span> all = constraints().flatMap &#123; $<span class="number">0</span>.buildUp() &#125;</span><br><span class="line">        activate(all)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">NSLayoutConstraint</span>.activate &#123;</span><br><span class="line">    foo.widthAnchor.constraint(equalToConstant: <span class="number">12</span>)</span><br><span class="line">    foo.constraintsToCenter(<span class="keyword">in</span>: bar)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>或许你觉得这样写还不够简单，那不妨考虑一下用自定义的运算符来代替单个约束的创建，比如说这样 <code>foo.widthAnchor =&gt; 12</code>。这样一来像是 SnapKit 这样的第三方布局库就不见得有什么优势了，能够用原生的话，当然还是原生的好。</p><p>然而 function builder 甚至还没进入 review 阶段。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;尽管用代码来写 layout constraint 已经比以前要简单许多了，但是还是有一些麻烦的地方。一个简单的例子就是很多第三方布局库都会提供一些这样的写法：&lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;foo.snp.makeConstraints &amp;#123; make &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    make.center.equalTo(bar)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    make.width.equalTo(&lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;如果用 layout anchor 来写的话，就需要三行了： &lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;NSLayoutConstraint&lt;/span&gt;.activate([&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    foo.centerXAnchor.constraint(equalTo: bar.centerXAnchor),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    foo.centerYAnchor.constraint(equalTo: bar.centerYAnchor),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    foo.widthAnchor.constraint(equalToConstant: &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;])&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;倒也不是没有办法优化，比如说我们可以给 &lt;code&gt;UIView&lt;/code&gt; 增加一个方法直接返回居中相关的两个约束，但最终的写出来却还是很奇怪：&lt;/p&gt;
+&lt;figure class=&quot;highlight swift&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;type&quot;&gt;NSLayoutConstraint&lt;/span&gt;.activate(&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    [foo.widthAnchor.constraint(equalToConstant: &lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;)]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    + foo.constraintsToCenter(&lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt;: bar)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
+    
+      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
+    
+      <category term="Layout Constraint" scheme="http://intii.com/tags/Layout-Constraint/"/>
+    
+      <category term="Function Builder" scheme="http://intii.com/tags/Function-Builder/"/>
+    
+  </entry>
+  
+  <entry>
     <title>新头像，一拳超人</title>
     <link href="http://intii.com/2019/avatar-one-punch-man-2019/"/>
     <id>http://intii.com/2019/avatar-one-punch-man-2019/</id>
     <published>2019-04-22T10:21:31.000Z</published>
-    <updated>2019-05-08T15:15:50.903Z</updated>
+    <updated>2019-07-24T14:15:19.000Z</updated>
     
-    <content type="html"><![CDATA[<p>原本其实想画只狼的，后来觉得义肢好麻烦，就只好一拳超人了（<br><a id="more"></a><br><img src="/media/avatar-one-punch-man-2019.PNG" alt="avatar-one-punch-man"></p>]]></content>
+    <content type="html"><![CDATA[<p>原本其实想画只狼的，后来觉得忍义手好麻烦，就只好一拳超人了（<br><a id="more"></a><br><img src="/media/avatar-one-punch-man-2019.PNG" alt="avatar-one-punch-man"></p>]]></content>
     
     <summary type="html">
     
-      &lt;p&gt;原本其实想画只狼的，后来觉得义肢好麻烦，就只好一拳超人了（&lt;br&gt;
+      &lt;p&gt;原本其实想画只狼的，后来觉得忍义手好麻烦，就只好一拳超人了（&lt;br&gt;
     
     </summary>
     
@@ -508,24 +541,6 @@
     <summary type="html">
     
       &lt;p&gt;一不小心，就要从寨大毕业了。&lt;/p&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>新头像，圣诞节</title>
-    <link href="http://intii.com/2015/avatar-christmas-2015/"/>
-    <id>http://intii.com/2015/avatar-christmas-2015/</id>
-    <published>2015-12-04T06:19:51.000Z</published>
-    <updated>2017-04-27T04:22:59.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>圣诞节。<br><a id="more"></a><br><img src="/media/avatar-christmas-2015.jpg" alt="avatar-christmas-2015"></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;圣诞节。&lt;br&gt;
     
     </summary>
     
