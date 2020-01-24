@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2019-09-13T01:48:04.356Z</updated>
+  <updated>2020-01-24T03:50:34.835Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>新头像，律师函警告老鼠</title>
+    <link href="http://intii.com/2020/avatar-mixxy-mouse-2020/"/>
+    <id>http://intii.com/2020/avatar-mixxy-mouse-2020/</id>
+    <published>2020-01-22T11:00:00.000Z</published>
+    <updated>2020-01-24T03:50:34.835Z</updated>
+    
+    <content type="html"><![CDATA[<p>鼠年快乐。<br><a id="more"></a><br><img src="/media/avatars/avatar-mixxy-mouse.PNG" alt="avatar-one-punch-man"></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;鼠年快乐。&lt;br&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>用 Function Builder 来简化 Auto Layout</title>
@@ -37,15 +55,15 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
     
-      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Layout Constraint" scheme="http://intii.com/tags/Layout-Constraint/"/>
     
       <category term="Function Builder" scheme="http://intii.com/tags/Function-Builder/"/>
+    
+      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
     
   </entry>
   
@@ -54,9 +72,9 @@
     <link href="http://intii.com/2019/avatar-one-punch-man-2019/"/>
     <id>http://intii.com/2019/avatar-one-punch-man-2019/</id>
     <published>2019-04-22T10:21:31.000Z</published>
-    <updated>2019-07-24T14:15:19.000Z</updated>
+    <updated>2020-01-24T03:47:42.678Z</updated>
     
-    <content type="html"><![CDATA[<p>原本其实想画只狼的，后来觉得忍义手好麻烦，就只好一拳超人了（<br><a id="more"></a><br><img src="/media/avatar-one-punch-man-2019.PNG" alt="avatar-one-punch-man"></p>]]></content>
+    <content type="html"><![CDATA[<p>原本其实想画只狼的，后来觉得忍义手好麻烦，就只好一拳超人了（<br><a id="more"></a><br><img src="/media/avatars/avatar-one-punch-man-2019.PNG" alt="avatar-one-punch-man"></p>]]></content>
     
     <summary type="html">
     
@@ -89,9 +107,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
     
@@ -131,9 +149,11 @@
     </summary>
     
     
+      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
       <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
-      <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
     
       <category term="NonScrollView" scheme="http://intii.com/tags/NonScrollView/"/>
     
@@ -146,8 +166,6 @@
       <category term="Container" scheme="http://intii.com/tags/Container/"/>
     
       <category term="ContainerViewController" scheme="http://intii.com/tags/ContainerViewController/"/>
-    
-      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
     
   </entry>
   
@@ -169,9 +187,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Optional" scheme="http://intii.com/tags/Optional/"/>
     
@@ -190,9 +208,9 @@
     <link href="http://intii.com/2018/new-avatar-slime-not-evil/"/>
     <id>http://intii.com/2018/new-avatar-slime-not-evil/</id>
     <published>2018-11-07T11:21:31.000Z</published>
-    <updated>2018-11-25T14:34:08.967Z</updated>
+    <updated>2020-01-24T03:48:47.520Z</updated>
     
-    <content type="html"><![CDATA[<p>本季最喜欢的动画大概就是转生变成史莱姆了吧，实在是太可爱了，看了第一集就决定新头像是史莱姆了，但拖延了一个月才画（<br><a id="more"></a><br><img src="/media/slime-not-evil.PNG" alt="slime-not-evil"></p>]]></content>
+    <content type="html"><![CDATA[<p>本季最喜欢的动画大概就是转生变成史莱姆了吧，实在是太可爱了，看了第一集就决定新头像是史莱姆了，但拖延了一个月才画（<br><a id="more"></a><br><img src="/media/avatars/slime-not-evil.PNG" alt="slime-not-evil"></p>]]></content>
     
     <summary type="html">
     
@@ -225,9 +243,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Vapor" scheme="http://intii.com/tags/Vapor/"/>
     
@@ -255,9 +273,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Objective C" scheme="http://intii.com/tags/Objective-C/"/>
     
@@ -288,9 +306,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Objective-C" scheme="http://intii.com/tags/Objective-C/"/>
     
@@ -316,9 +334,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="KeyPath" scheme="http://intii.com/tags/KeyPath/"/>
     
@@ -335,7 +353,7 @@
     <link href="http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/"/>
     <id>http://intii.com/2018/decorate-uinavigationbar-with-blend-mode/</id>
     <published>2018-03-13T06:21:00.000Z</published>
-    <updated>2018-11-25T14:17:27.810Z</updated>
+    <updated>2020-01-24T03:49:02.317Z</updated>
     
     <content type="html"><![CDATA[<p>最近又在更新 Best Before.app，算是把同步写好了，但是还是打算顺便更新一下 UI。之前加入了自定义分类的功能，还允许用户给分类设置一个颜色，但是这个颜色却没有什么实际的作用，在这次更新中我打算在 Navigation Bar 上面显示出这个颜色。</p><p><img src="/media/decorate-uinavigationbar-with-blend-mode/old.png" width="375px" alt="old"/></p><p>应该怎么显示呢，一开始我的想法是让分类名称的第一个字符设置为这个颜色。尽管 <code>UINavigationBar</code> 并没有给我们提供一个 API 去做这个事情，我们还是能够很暴力地从其众多的 <code>subviews</code> 的 <code>subviews</code> 当中，找到这些 <code>UILabel</code>。如果 iOS 还没到 11，这就足够了，但是 iOS 11 中却引入了 Large Title，而即便我们修改了 Large Title 的 <code>attributedString</code>，它也会在我们拖动底下的 scroll view 时打回原形。</p><p>很讨厌。</p><a id="more"></a><p>这时我想起了 Sketch 中 Blend Mode，在 Sketch 用 Blend Mode Lighten 能够将颜色附着在图标上，虽然没法简单地定位到刚好只覆盖到第一个字符，但好像也挺拉风的，于是我在 Sketch 里面做了一些修改。</p><p><img src="/media/decorate-uinavigationbar-with-blend-mode/new.png" width="375px" alt="new"/></p><p>那 iOS 上是否有这样的功能呢。</p><p>居然有，我们只需要在 <code>UINavigationBar</code> 上添加一个 <code>CALayer</code>，并将其的 <code>compositingFilter</code> 赋值为 <code>lightenBlendMode</code> 就可以了。同时还要 observe Navigation Bar 的 <code>frame</code> 以随着它的高度变动修改这个 layer 的 <code>path</code>。</p><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">createNavigationBarBlending</span><span class="params">()</span></span> &#123;</span><br><span class="line">    blendLayer = &#123;</span><br><span class="line">        <span class="keyword">let</span> it = <span class="type">CAShapeLayer</span>()</span><br><span class="line">        it.compositingFilter = <span class="string">"lightenBlendMode"</span></span><br><span class="line">        navigationBar.layer.addSublayer(it)</span><br><span class="line">        <span class="keyword">let</span> observation = navigationBar.observe(\.frame) &#123; bar, <span class="number">_</span> <span class="keyword">in</span></span><br><span class="line">            it.path = <span class="type">UIBezierPath</span>(rect: <span class="type">CGRect</span>(x: <span class="number">0</span>, y: <span class="number">0</span>, </span><br><span class="line">                                                width: <span class="number">50</span>, </span><br><span class="line">                                                height: bar.frame.height)).cgPath</span><br><span class="line">        &#125;</span><br><span class="line">        disposables.append(observation)</span><br><span class="line">        <span class="keyword">return</span> it</span><br><span class="line">    &#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>最后我们只需要在显示分类列表时，修改 <code>blendLayer</code> 的 <code>fillColor</code> 就行了。值得一提的是 <code>UINavigationBar.frame</code> 恰好只包含到了 Large Title View，并不包括搜索框。</p><p>当然如果再花些功夫，也还是能让它只覆盖到第一个字符的，但是也没必要了吧。</p>]]></content>
     
@@ -349,9 +367,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="UINavigationBar" scheme="http://intii.com/tags/UINavigationBar/"/>
     
@@ -370,9 +388,9 @@
     <link href="http://intii.com/2018/avatar-uhd-hunter/"/>
     <id>http://intii.com/2018/avatar-uhd-hunter/</id>
     <published>2018-01-21T10:21:31.000Z</published>
-    <updated>2018-03-13T04:30:56.000Z</updated>
+    <updated>2020-01-24T03:49:38.800Z</updated>
     
-    <content type="html"><![CDATA[<p>热烈庆祝 MHW 面世。<br><a id="more"></a><br><img src="/media/avatar-uhd-hunter.jpg" alt="avatar-charge-blade-maste"></p>]]></content>
+    <content type="html"><![CDATA[<p>热烈庆祝 MHW 面世。<br><a id="more"></a><br><img src="/media/avatars/avatar-uhd-hunter.jpg" alt="avatar-charge-blade-maste"></p>]]></content>
     
     <summary type="html">
     
@@ -402,9 +420,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
   </entry>
   
@@ -425,9 +443,9 @@
     </summary>
     
     
-      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
-    
       <category term="iOS" scheme="http://intii.com/tags/iOS/"/>
+    
+      <category term="Swift" scheme="http://intii.com/tags/Swift/"/>
     
       <category term="Objective-C" scheme="http://intii.com/tags/Objective-C/"/>
     
@@ -438,7 +456,7 @@
     <link href="http://intii.com/2017/a-better-way-to-display-a-book-cover-questionmark/"/>
     <id>http://intii.com/2017/a-better-way-to-display-a-book-cover-questionmark/</id>
     <published>2017-04-28T14:30:13.000Z</published>
-    <updated>2018-11-25T14:18:57.431Z</updated>
+    <updated>2020-01-24T03:48:54.998Z</updated>
     
     <content type="html"><![CDATA[<p>上周赶着要交一个作业，原本是想着开新的项目写一部分交上去的，后来进度太糟糕，就打算另辟蹊径。只剩下几天时间，偶然看 Dribbble 的时候看到了一个豆瓣图书的客户端，觉得要不写个扫码获取书本资料的 app 吧，简单，又符合题意，又能顺便写写 Objective-C 练习一下，便以 <code>Book Shelf</code> 为关键词在 Dribbble 上搜索一番，发现<a href="https://dribbble.com/shots/3116835-Bookshelf">有个设计</a>很棒。它展示的书籍封面是立体的，打开大图仔细一看，发现事情没有那么简单，看起来像是在一张平面的封面上，切了角，打了高光加了阴影，却高大上了许多。</p><p>先是在 Sketch 里面试了试。</p><object class="svg" style="width: 100%;" data="/media/a-better-way-to-display-a-book-cover-questionmark/displaying-book-cover.svg" type="image/svg+xml"><br>  <img src="/media/a-better-way-to-display-a-book-cover-questionmark/displaying-book-cover.png" /><br></object><a id="more"></a><p>具体实现简单粗暴，就是<a href="https://github.com/int123c/StallApp/blob/master/Stall/BookView.m">上面罩了一堆 <code>CALayer</code></a>（</p><p>具体效果：<br><img src="/media/a-better-way-to-display-a-book-cover-questionmark/IMG_2204.png" style="width:400px;" /></p>]]></content>
     
@@ -523,24 +541,6 @@
     <summary type="html">
     
       &lt;p&gt;为了庆祝《为美好的世界献上祝福》第二季即将在一月开播，所以做了个惠惠版的头像。想要加入一些动作，头像主要参考了惠惠官方粘土人的宣传画。惠惠真是太棒了。&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>新头像，从寨大毕业</title>
-    <link href="http://intii.com/2016/avatar-graduation-2016/"/>
-    <id>http://intii.com/2016/avatar-graduation-2016/</id>
-    <published>2016-04-18T11:58:45.000Z</published>
-    <updated>2016-12-27T13:22:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>一不小心，就要从寨大毕业了。</p><a id="more"></a><p><img src="/media/avatar-graduation-2016.jpg" alt=""></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一不小心，就要从寨大毕业了。&lt;/p&gt;
     
     </summary>
     
