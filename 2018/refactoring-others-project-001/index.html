@@ -14,7 +14,7 @@
 <p>更可怕的是，我尝试去改了一下数字，界面却没有发生变化。对不起，我只能想办法让它变宽一些，具体宽多少，我暂时还没有办法控制，等下一版吧。</p>
 <p>在 iPhone X 的适配上也是使用了判断机型提供相应 magic value 的方式，我已经预感到下一次适配时的痛苦了。</p>
 <h2 id="太喜欢宏定义"><a href="#太喜欢宏定义" class="headerlink" title="太喜欢宏定义"></a>太喜欢宏定义</h2><p>并不是说宏定义不好，我也喜欢用宏定义来实现 Objc 下的 let 和 var，但是有些常量实际上用其他方式来表示会更好一些。比如说颜色，这个项目有一个主题色被定义成了常量</p>
-<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#define GLOBAL_TINTCOLOR UIColorFromRGB(0x12abcd)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> GLOBAL_TINTCOLOR UIColorFromRGB(0x12abcd)</span></span><br></pre></td></tr></table></figure>
 <p>我总是不记得这个宏叫什么，因为还存在很多其它名称各异的颜色常量，叫做 <code>XXXX_COLOR</code>、<code>XXXX_COLOR_XXX</code> 或者 <code>ColorForXXXXX</code>，甚至还有 <code>COLOR_0xAAAAAA</code> 这样的东西。要说它们命名能规范一些、定义能集中一些，问题倒是不大，但它们基本上是东一个西一个，名称格式也各式各样，除非记得名字，想找到它们还是很麻烦的，自动补全都帮不了你。</p>
 <p>其实写成 <code>UIColor</code> 的 category 不就完了嘛。</p>
 <h2 id="太多-Warning"><a href="#太多-Warning" class="headerlink" title="太多 Warning"></a>太多 Warning</h2><p>我第一次 build 这个项目的时候真是惊呆了，300 多个 warning，其中可能有一半是因为用了 iOS 9 或之前开始 deprecate 的 API。我掐指一算，9、10、11、12，这些难道不应该两年前就清掉吗，反倒还在继续用。我也没法现在就动手把它们全部改掉，只好先写个 wrapper 把它们都包住，关掉 deprecated functions 的 warning，日后再统一处理。</p>
@@ -27,7 +27,7 @@
 <p><strong>天知道这要包在一个 <code>UINavigationController</code> 里面噢。</strong></p>
 <p>这种情况，把 <code>SomeViewController</code> 直接做成一个 <code>UINavigationController</code> 或者是用一个 navigation coordinator 来控制跳转，怕不是要强个一百倍。</p>
 <p>这种代码的复制粘贴还有不少。</p>
-</div></article></div></main><footer><div class="paginator"><a href="/2018/write-api-client-with-sourcery/" class="prev">← Previous Post</a><a href="/2018/how-to-reference-to-a-value-type-property/" class="next">Next Post →</a></div><div id="container"></div><div id="disqus_thread"></div><script>var disqus_shortname = 'intii-com';
+</div></article></div></main><footer><div class="paginator"><a href="/2018/write-api-client-with-sourcery/" class="prev">← 上一篇</a><a href="/2018/how-to-reference-to-a-value-type-property/" class="next">下一篇 →</a></div><div id="container"></div><div id="disqus_thread"></div><script>var disqus_shortname = 'intii-com';
 var disqus_identifier = '2018/refactoring-others-project-001/';
 var disqus_title = '接手别人的项目';
 var disqus_url = 'http://intii.com/2018/refactoring-others-project-001/';
