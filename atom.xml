@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://intii.com/"/>
-  <updated>2020-11-17T16:33:37.578Z</updated>
+  <updated>2021-01-05T13:13:05.204Z</updated>
   <id>http://intii.com/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>假如我想要在 Xcode 中预览 markdown</title>
+    <link href="http://intii.com/2021/if-i-want-to-preview-markdown-in-xcode/"/>
+    <id>http://intii.com/2021/if-i-want-to-preview-markdown-in-xcode/</id>
+    <published>2021-01-05T13:10:10.000Z</published>
+    <updated>2021-01-05T13:13:05.204Z</updated>
+    
+    <content type="html"><![CDATA[<p>那么我会在文件列表中右键相应文件，选择 Open As，再选择 Quick Look。</p><p>如果你没有安装任何的 Mardown Quick Look 插件，我<a href="https://github.com/sbarex/QLMarkdown">推荐这款</a>。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;那么我会在文件列表中右键相应文件，选择 Open As，再选择 Quick Look。&lt;/p&gt;
+&lt;p&gt;如果你没有安装任何的 Mardown Quick Look 插件，我&lt;a href=&quot;https://github.com/sbarex/QLMarkdown&quot;&gt;推荐这款&lt;
+      
+    
+    </summary>
+    
+    
+      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
+    
+      <category term="Markdown" scheme="http://intii.com/tags/Markdown/"/>
+    
+  </entry>
   
   <entry>
     <title>怎样才能不被 Xcode SwiftUI Preview 给烦到</title>
@@ -534,24 +560,6 @@
     
       &lt;p&gt;不知道豆瓣是怎么考虑的，豆瓣收藏的 RSS 并没有给出电影海报／书封面的大图，每次看到 Day One 里存了的那张迷你海报就不舒服( ･᷄ὢ･᷅ )。有一个曲线救国的方式是将豆瓣收藏同步到新浪微博，再用 IFTTT 将新浪微博同步到 Day One 里。然而我不用新浪微博很久了，突然在上面发些什么东西总觉得有些不妥，而且这个方法要求在收藏的时候添加一个 tag 以区别它们与其它微博，不够干爽。&lt;/p&gt;
 &lt;p&gt;突然今天看到&lt;a href=&quot;http://www.appinn.com/integromat/&quot;&gt;小众软件推荐了 Integromat&lt;/a&gt;，这个产品类似于 IFTTT，但能串联很多任务，甚至包括了正则表达式匹配，再配合 IFTTT 就能将拥有大图的豆瓣收藏保存到 Day One 里了。&lt;/p&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>2016 年总结</title>
-    <link href="http://intii.com/2016/summary-of-2016/"/>
-    <id>http://intii.com/2016/summary-of-2016/</id>
-    <published>2016-12-30T13:37:32.000Z</published>
-    <updated>2016-12-30T15:48:13.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>如同往常一样，今年定下了很多目标，达成了没几个，很多遗憾。</p><a id="more"></a>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如同往常一样，今年定下了很多目标，达成了没几个，很多遗憾。&lt;/p&gt;
     
     </summary>
     
