@@ -40,6 +40,29 @@
   </entry>
   
   <entry>
+    <title>假如我想要在 Xcode 中预览 Markdown</title>
+    <link href="http://intii.com/2021/utility-type-in-swift-partial/"/>
+    <id>http://intii.com/2021/utility-type-in-swift-partial/</id>
+    <published>2021-01-05T13:10:10.000Z</published>
+    <updated>2021-09-25T02:06:58.762Z</updated>
+    
+    <content type="html"><![CDATA[<p>那么我会在文件列表中右键相应文件，选择 Open As，再选择 Quick Look。</p><p>如果你没有安装任何的 Mardown Quick Look 插件，我<a href="https://github.com/sbarex/QLMarkdown">推荐这款</a>。</p><a id="more"></a>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;那么我会在文件列表中右键相应文件，选择 Open As，再选择 Quick Look。&lt;/p&gt;
+&lt;p&gt;如果你没有安装任何的 Mardown Quick Look 插件，我&lt;a href=&quot;https://github.com/sbarex/QLMarkdown&quot;&gt;推荐这款&lt;/a&gt;。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="Xcode" scheme="http://intii.com/tags/Xcode/"/>
+    
+      <category term="Markdown" scheme="http://intii.com/tags/Markdown/"/>
+    
+  </entry>
+  
+  <entry>
     <title>怎样才能不被 Xcode SwiftUI Preview 给烦到</title>
     <link href="http://intii.com/2020/stop-xcode-swiftui-preview-from-bothering-you/"/>
     <id>http://intii.com/2020/stop-xcode-swiftui-preview-from-bothering-you/</id>
@@ -538,25 +561,6 @@
     
       &lt;p&gt;还有十天 MHXX 就要发售了，非常地期待，于是最近坐火车的时候都会掏出 3DS 来玩玩 MHX。MHX 里面最喜欢的武器还是盾斧，刚开始玩的时候用的都是武士道风格，最近试了试强袭风格，觉得还是挺不错的。&lt;/p&gt;
 &lt;p&gt;这次的头像参考了某雌火龙套装 + 盾斧的手办，虽然只带了头盔，&lt;del&gt;但居然也是女装哦&lt;/del&gt;。武器看起来是工会盾斧，没有认真画，歪七扭八的。&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>将豆瓣收藏保存到 Day One 的一个正确方式</title>
-    <link href="http://intii.com/2017/saving-douban-fav-to-dayone-the-correct-way/"/>
-    <id>http://intii.com/2017/saving-douban-fav-to-dayone-the-correct-way/</id>
-    <published>2017-01-23T15:30:52.000Z</published>
-    <updated>2017-01-24T06:21:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>不知道豆瓣是怎么考虑的，豆瓣收藏的 RSS 并没有给出电影海报／书封面的大图，每次看到 Day One 里存了的那张迷你海报就不舒服( ･᷄ὢ･᷅ )。有一个曲线救国的方式是将豆瓣收藏同步到新浪微博，再用 IFTTT 将新浪微博同步到 Day One 里。然而我不用新浪微博很久了，突然在上面发些什么东西总觉得有些不妥，而且这个方法要求在收藏的时候添加一个 tag 以区别它们与其它微博，不够干爽。</p><p>突然今天看到<a href="http://www.appinn.com/integromat/">小众软件推荐了 Integromat</a>，这个产品类似于 IFTTT，但能串联很多任务，甚至包括了正则表达式匹配，再配合 IFTTT 就能将拥有大图的豆瓣收藏保存到 Day One 里了。</p><a id="more"></a><p>豆瓣开放给任意人使用的电影／图书信息 API 里并没有包含大图的链接，但仔细看能够发现：</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 电影</span><br><span class="line">img3.doubanio.com/view/movie_poster_cover/ipst/public/p2391300344.jpg // 小图</span><br><span class="line">img3.doubanio.com/view/movie_poster_cover/lpst/public/p2391300344.jpg // 大图</span><br><span class="line"></span><br><span class="line">// 图书</span><br><span class="line">img3.doubanio.com/spic/s28416025.jpg // 小图</span><br><span class="line">img3.doubanio.com/lpic/s28416025.jpg // 大图</span><br></pre></td></tr></table></figure><p>不就差了一个字母而已嘛可恶。你看到是哪个字母了吗可恶。</p><p>所以只需要在 Integromat 里用正则表达式匹配前后两部分再拼起来再利用 IFTTT Maker channel 发送到 Day One 就可以了。简直浪费人生。</p><p><del>Integromat 的客服不错，之前我正则表达式写错了他们还帮我改好了（</del></p><p>干这种事情用免费版就足够了。</p><p><img src="http://o7kolop30.bkt.clouddn.com/Screen Shot 2017-01-23 at 11.28.29 PM-1.png" alt="Scenario in Integromat"></p><p>最后终于能看到大图啦好高兴。</p><p><img src="http://o7kolop30.bkt.clouddn.com/Screen Shot 2017-01-23 at 11.24.32 PM.png" alt="Douban Fav with Large Album Picture"></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;不知道豆瓣是怎么考虑的，豆瓣收藏的 RSS 并没有给出电影海报／书封面的大图，每次看到 Day One 里存了的那张迷你海报就不舒服( ･᷄ὢ･᷅ )。有一个曲线救国的方式是将豆瓣收藏同步到新浪微博，再用 IFTTT 将新浪微博同步到 Day One 里。然而我不用新浪微博很久了，突然在上面发些什么东西总觉得有些不妥，而且这个方法要求在收藏的时候添加一个 tag 以区别它们与其它微博，不够干爽。&lt;/p&gt;
-&lt;p&gt;突然今天看到&lt;a href=&quot;http://www.appinn.com/integromat/&quot;&gt;小众软件推荐了 Integromat&lt;/a&gt;，这个产品类似于 IFTTT，但能串联很多任务，甚至包括了正则表达式匹配，再配合 IFTTT 就能将拥有大图的豆瓣收藏保存到 Day One 里了。&lt;/p&gt;
     
     </summary>
     
